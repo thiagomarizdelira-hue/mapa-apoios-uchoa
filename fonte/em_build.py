@@ -109,7 +109,7 @@ em=collections.defaultdict(list)
 for (m,a,ano,tk),(vp,vo) in agg.items():
     if vp+vo<1: continue
     em[m].append([aidx[a],int(ano),tk,round(vp),round(vo)])
-json.dump({'fonte':'Portal da Transparência (CGU) — Emendas parlamentares por favorecido, valores pagos','atualizado':'24/11/2026',
+json.dump({'fonte':'Portal da Transparência (CGU) — Emendas parlamentares por favorecido, valores pagos','atualizado':__import__('datetime').date.today().strftime('%d/%m/%Y'),
   'autores':[autores[a] for a in alist],'mun':em},open(out,'w'),ensure_ascii=False,separators=(',',':'))
 tot=sum(x[3] for v in em.values() for x in v)
 print(len(alist),'autores',sum(len(v) for v in em.values()),'linhas',len(em),'municipios',round(tot/1e6),'M prefeituras',file=sys.stderr)

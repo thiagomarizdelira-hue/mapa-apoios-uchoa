@@ -39,4 +39,6 @@ SNAPSHOT=dados/snapshot.json python3 build.py dados template.html ../index.html 
 - `build.py`: junta os dados ao template e gera o CSV
 - `em_build.py`: processa o arquivo de emendas do Portal da Transparência
 - `vc_build.py`: processa a votação por cidade do TSE
+- `manifest.webmanifest`, `sw.js` e `icons/`: deixam o site instalável como app
+- `.github/workflows/publicar.yml`: publica no GitHub Pages a cada envio e atualiza as emendas toda segunda-feira (aba Actions → Atualizar emendas e publicar → Run workflow para atualizar na hora)
 - `site/mapa-apoios-pe.html`: versão publicada no claude.ai, sem a cópia dos apoios

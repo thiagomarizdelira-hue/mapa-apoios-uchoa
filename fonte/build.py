@@ -68,7 +68,12 @@ d['view'] = {'w': W + 2 * PAD, 'h': round(H + 2 * PAD, 1), 'inset': INS}
 blob = json.dumps(d, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c').replace('¿', '–')
 html = open(TPL, encoding='utf-8').read().replace('/*__DATA__*/null', blob)
 if os.environ.get('SNAPSHOT'):
-    html = '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n</head>\n<body>\n' + html + '\n</body>\n</html>\n'
+    head = ('<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
+            '<meta name="description" content="Prefeitos, deputados federais 2026, votação por cidade, apoios e emendas parlamentares em Pernambuco.">\n'
+            '<meta name="theme-color" content="#04100d">\n<link rel="manifest" href="manifest.webmanifest">\n<link rel="icon" href="icons/icon.svg" type="image/svg+xml">\n'
+            '<link rel="apple-touch-icon" href="icons/icon-180.png">\n<meta name="apple-mobile-web-app-capable" content="yes">\n</head>\n<body>\n')
+    sw = "\n<script>if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});</script>"
+    html = head + html + sw + '\n</body>\n</html>\n'
 open(OUT, 'w', encoding='utf-8').write(html)
 
 def emcols(mid):

@@ -1,0 +1,74 @@
+name: Atualizar emendas e publicar
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 9 * * 1"   # toda segunda-feira, 06:00 de Brasília
+  workflow_dispatch:       # botão "Run workflow" para atualizar na hora
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Baixar emendas parlamentares (Portal da Transparência)
+        if: github.event_name != 'push'
+        run: |
+          mkdir -p /tmp/emendas
+          curl -sSL -A "Mozilla/5.0" -o /tmp/emendas/em.zip "https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares/UNICO"
+          unzip -o -q /tmp/emendas/em.zip EmendasParlamentares_PorFavorecido.csv -d /tmp/emendas
+          python3 -I fonte/em_build.py fonte/dados /tmp/emendas fonte/dados/emendas.json
+
+      - name: Gerar o site
+        run: |
+          SNAPSHOT=fonte/dados/snapshot.json python3 -I fonte/build.py fonte/dados fonte/template.html index.html relatorio_prefeitos_pe.csv
+          mkdir -p _site
+          cp index.html manifest.webmanifest sw.js relatorio_prefeitos_pe.csv _site/
+          cp -r icons _site/
+          touch _site/.nojekyll
+          du -sh _site
+
+      - name: Registrar a atualização no repositório
+        if: github.event_name != 'push'
+        run: |
+          python3 - <<'PY'
+          import json
+          e = json.load(open("fonte/dados/emendas.json"))
+          open("ULTIMA_ATUALIZACAO.md", "w").write(f"# Última atualização das emendas\n\n{e['atualizado']}\n")
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ULTIMA_ATUALIZACAO.md fonte/dados/emendas.json index.html relatorio_prefeitos_pe.csv
+          git diff --cached --quiet || (git commit -m "Atualiza emendas" && git push)
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
