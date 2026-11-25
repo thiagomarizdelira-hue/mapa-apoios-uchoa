@@ -473,6 +473,9 @@ const fmtRfull = v => Math.round(v).toLocaleString('pt-BR', { style: 'currency',
 const emBins = () => state.emaut === '' ? [1e7, 2e7, 4e7] : [5e5, 1.5e6, 4e6];
 const emBinLabels = () => state.emaut === '' ? ['até R$ 10 mi', 'R$ 10–20 mi', 'R$ 20–40 mi', 'R$ 40 mi ou mais'] : ['até R$ 500 mil', 'R$ 500 mil–1,5 mi', 'R$ 1,5–4 mi', 'R$ 4 mi ou mais'];
 const emHeat = v => { if (v <= 0) return 'var(--land)'; const b = emBins(); return `var(--heat-${v < b[0] ? 1 : v < b[1] ? 2 : v < b[2] ? 3 : 4})`; };
+function emOficial(i) { const [a, b] = emRange(), o = EM.oficial?.[i] || {}; let e = 0, p = 0; for (const y in o) if (+y >= a && +y <= b) { e += o[y][0]; p += o[y][1]; } return { e, p }; }
+function emSemCid(i) { const [a, b] = emRange(), o = EM.semCidade?.[i] || {}; let bk = 0, ot = 0; for (const y in o) if (+y >= a && +y <= b) { bk += o[y][0]; ot += o[y][1]; } return { bk, ot }; }
+function emIdx(sq) { return EM.autores.map((a, i) => a.sq === sq ? i : -1).filter(i => i >= 0); }
 function emStateTotals() { const o = {}; for (const id in EM.mun) for (const r of emRows(id)) o[r.a] = (o[r.a] || 0) + r.v; return o; }
 function emDepStats(sq) { let v = 0, n = 0; const idx = EM.autores.map((a, i) => a.sq === sq ? i : -1).filter(i => i >= 0); if (!idx.length) return null; for (const id in EM.mun) { let s = 0; for (const r of emRows(id)) if (idx.includes(r.a)) s += r.v; if (s > 0) { v += s; n++; } } return { v, n }; }
 const TIPOS = ['Apoio declarado', 'Parceria / emenda', 'Aliança partidária', 'Em negociação', 'Levantamento abr/2025 (preliminar)'];
@@ -702,7 +705,7 @@ function paintLegend() {
     html = emBinLabels().map((t, k) => `<span><i style="background:var(--heat-${k + 1})"></i>${t}</span>`).join('') + `<span><i style="background:var(--land)"></i>nenhuma</span>`
       + (state.emaut === '' ? `<span class="hint">Pago em ${esc(emPerLabel())} a ${state.emdest === 'all' ? 'favorecidos' : 'prefeituras e fundos municipais'} de PE: <b>${fmtRfull(sum)}</b>. Maiores autores (clique para ver no mapa):</span>`
         + top.map(([a, v]) => `<button type="button" class="lg" data-emaut="${a}"><i style="background:${emColor(+a)}"></i>${esc(emName(+a))} <span class="mono">${fmtR(v)}</span></button>`).join('')
-        : `<span class="hint">${esc(emName(+state.emaut))}: <b>${fmtRfull(tots[state.emaut] || 0)}</b> pagos em ${MUN.filter(m => emSum(m.id) > 0).length} cidades (${esc(emPerLabel())}).</span><button class="btn ghost" type="button" id="emclear">Ver todos os autores</button>`);
+        : (() => { const i = +state.emaut, o = emOficial(i), sc = emSemCid(i); return `<span class="hint">${esc(emName(i))} · ${esc(emPerLabel())}. <b>No Portal da Transparência</b> (emendas desses anos): ${fmtRfull(o.e)} empenhados e ${fmtRfull(o.p)} pagos. <b>No mapa</b> (pagamentos desses anos que chegaram a cidades de PE): ${fmtRfull(tots[state.emaut] || 0)} em ${MUN.filter(m => emSum(m.id) > 0).length} cidades.${sc.bk >= 1 ? ` Outros ${fmtRfull(sc.bk)} foram pagos via Banco do Brasil/Caixa, e a fonte não informa a cidade (em geral, repasses da saúde em 2023–2024).` : ''}${sc.ot >= 1 ? ` ${fmtRfull(sc.ot)} foram pagos a fornecedores ou órgãos fora de PE.` : ''}</span><button class="btn ghost" type="button" id="emclear">Ver todos os autores</button>`; })());
   } else if (state.dep) {
     const d = depById[state.dep], n = new Set(state.apoios.filter(a => a.deputadoId === state.dep).map(a => a.municipioId)).size;
     html = `<span><i style="background:var(--sun)"></i>Prefeituras que apoiam ${esc(d.nome)} (${n})</span><button class="btn ghost" type="button" id="cleardep">Limpar filtro</button>`;
@@ -879,7 +882,7 @@ function emPanel(m) {
       <div class="em-list">${by.slice(0, 8).map(row).join('')}</div>
       ${by.length > 8 ? `<details class="em-more"><summary>Ver os outros ${by.length - 8} autores</summary><div class="em-list">${by.slice(8).map(row).join('')}</div></details>` : ''}`
       : `<div class="empty">Nenhuma emenda paga para esta prefeitura em ${esc(emPerLabel())}.</div>`}
-    <p class="note">Valores efetivamente pagos (não só empenhados), segundo o Portal da Transparência (CGU). Inclui transferências especiais ("emendas Pix"), bancada e comissões.</p>
+    <p class="note">Valores efetivamente pagos à cidade (não só empenhados), pelo ano do pagamento, segundo o Portal da Transparência (CGU). Inclui transferências especiais ("emendas Pix"), bancada e comissões. Pagamentos feitos via Banco do Brasil ou Caixa, sem cidade informada na fonte, não aparecem aqui; o total de cada deputado no Portal está na aba Deputados.</p>
   </div>`;
 }
 
@@ -965,7 +968,7 @@ function renderDep() {
         <span class="num">${esc(d.numero)}</span>
         <span style="min-width:0"><span class="dn">${esc(d.nome)}</span> <span class="pill"><i style="background:${pcolor(d.partido)}"></i>${esc(d.partido)}</span>
           <div class="dp">${fmtN(d.votosPE)} votos · ${esc(d.situacao)}${d.federacao ? ' · Federação ' + esc(d.federacao) : ''}</div>
-          ${(() => { const s = emDepStats(d.id); return s && s.v ? `<div class="dp">Emendas pagas ${esc(emPerLabel())}: ${fmtR(s.v)} em ${s.n} cidades</div>` : ''; })()}
+          ${(() => { const ix = emIdx(d.id); if (!ix.length) return ''; const o = ix.reduce((t, i) => { const x = emOficial(i); t.e += x.e; t.p += x.p; return t; }, { e: 0, p: 0 }); const s = emDepStats(d.id) || { v: 0, n: 0 }; if (!o.e && !s.v) return ''; return `<div class="dp">Emendas ${esc(emPerLabel())} (Portal): ${fmtR(o.e)} empenhados · ${fmtR(o.p)} pagos</div><div class="dp">Pago e identificado em cidades de PE: ${fmtR(s.v)} em ${s.n} cidades</div>`; })()}
           <div class="bar" style="width:${n ? Math.max(4, n / max * 100) : 0}%"></div></span>
         <span class="cnt">${n}</span>
       </button>`).join('')}</div>`;

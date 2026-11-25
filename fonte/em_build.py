@@ -83,8 +83,12 @@ def pretty(a):
 
 agg=collections.defaultdict(lambda:[0.0,0.0]); miss=collections.Counter(); autores={}
 r=csv.DictReader(open(src+'/EmendasParlamentares_PorFavorecido.csv',encoding='latin1'),delimiter=';')
+fora=collections.defaultdict(lambda:[0.0,0.0])
 for row in r:
-    if row['UF Favorecido']!='PE': continue
+    if row['UF Favorecido']!='PE':
+        k=(row['Nome do Autor da Emenda'].strip(),row['Ano/Mês'][:4])
+        fora[k][0 if re.search(r'BANCO DO BRASIL|CAIXA ECONOMICA',row['Favorecido']) else 1]+=num(row['Valor Recebido'])
+        continue
     n=norm(row['Município Favorecido']); n=alias.get(n,n)
     if n not in mun: miss[n]+=1; continue
     a=row['Nome do Autor da Emenda'].strip(); ano=row['Ano/Mês'][:4]; t=row['Tipo de Emenda']
@@ -109,8 +113,18 @@ em=collections.defaultdict(list)
 for (m,a,ano,tk),(vp,vo) in agg.items():
     if vp+vo<1: continue
     em[m].append([aidx[a],int(ano),tk,round(vp),round(vo)])
+# totais oficiais (como no Portal): por ano da emenda, empenhado e pago (inclui restos a pagar pagos)
+ofi=collections.defaultdict(lambda:collections.defaultdict(lambda:[0.0,0.0]))
+for row in csv.DictReader(open(src+'/EmendasParlamentares.csv',encoding='latin1'),delimiter=';'):
+    a=row['Nome do Autor da Emenda'].strip()
+    if a not in aidx: continue
+    o=ofi[aidx[a]][row['Ano da Emenda']]; o[0]+=num(row['Valor Empenhado']); o[1]+=num(row['Valor Pago'])+num(row['Valor Restos A Pagar Pagos'])
+oficial={str(i):{ano:[round(v[0]),round(v[1])] for ano,v in ys.items() if v[0] or v[1]} for i,ys in ofi.items()}
+semcid={}
+for (a,ano),(vb,vo) in fora.items():
+    if a in aidx and (vb>=1 or vo>=1): semcid.setdefault(str(aidx[a]),{})[ano]=[round(vb),round(vo)]
 json.dump({'fonte':'Portal da Transparência (CGU) — Emendas parlamentares por favorecido, valores pagos','atualizado':__import__('datetime').date.today().strftime('%d/%m/%Y'),
-  'autores':[autores[a] for a in alist],'mun':em},open(out,'w'),ensure_ascii=False,separators=(',',':'))
+  'autores':[autores[a] for a in alist],'mun':em,'oficial':oficial,'semCidade':semcid},open(out,'w'),ensure_ascii=False,separators=(',',':'))
 tot=sum(x[3] for v in em.values() for x in v)
 print(len(alist),'autores',sum(len(v) for v in em.values()),'linhas',len(em),'municipios',round(tot/1e6),'M prefeituras',file=sys.stderr)
 for a in alist:

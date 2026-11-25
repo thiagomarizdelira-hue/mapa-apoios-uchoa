@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p /tmp/emendas
           curl -sSL -A "Mozilla/5.0" -o /tmp/emendas/em.zip "https://portaldatransparencia.gov.br/download-de-dados/emendas-parlamentares/UNICO"
-          unzip -o -q /tmp/emendas/em.zip EmendasParlamentares_PorFavorecido.csv -d /tmp/emendas
+          unzip -o -q /tmp/emendas/em.zip EmendasParlamentares.csv EmendasParlamentares_PorFavorecido.csv -d /tmp/emendas
           python3 -I fonte/em_build.py fonte/dados /tmp/emendas fonte/dados/emendas.json
 
       - name: Gerar o site
