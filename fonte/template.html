@@ -1,0 +1,1099 @@
+<meta charset="utf-8">
+<title>Mapa de Apoios PE</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: painel de comando escuro. Mapa como tela principal, painel lateral de vidro; empilha no celular.
+   Direção: tecnológico, verde-esmeralda em degradê até o ciano, sobre fundo verde-petróleo quase preto com grade fina. Tema único escuro, por escolha. */
+:root {
+  color-scheme: dark;
+  --bg: #04100d;
+  --bg-2: #071a15;
+  --surface: rgba(10, 30, 25, 0.72);
+  --surface-solid: #0b1f1a;
+  --surface-2: rgba(52, 211, 153, 0.07);
+  --line: rgba(110, 231, 183, 0.14);
+  --line-strong: rgba(110, 231, 183, 0.32);
+  --fg: #e3f7ef;
+  --muted: #86a99d;
+  --accent: #34d399;
+  --accent-2: #22d3ee;
+  --accent-ink: #022018;
+  --grad: linear-gradient(120deg, #6ee7b7 0%, #34d399 35%, #10b981 60%, #22d3ee 100%);
+  --grad-soft: linear-gradient(120deg, rgba(52, 211, 153, 0.18), rgba(34, 211, 238, 0.12));
+  --glow: 0 0 0 1px rgba(52, 211, 153, 0.25), 0 10px 40px -12px rgba(16, 185, 129, 0.45);
+  --sun: #67e8f9;
+  --sun-soft: rgba(52, 211, 153, 0.12);
+  --land: #11261f;
+  --land-line: #04100d;
+  --danger: #fb7185;
+  --ok: #4ade80;
+  --heat-1: #0f4d3a; --heat-2: #10885f; --heat-3: #2fc98a; --heat-4: #a7f3d0;
+  --p-psdb: #5b93f0; --p-psb: #f2934a; --p-pp: #5cc3cb; --p-rep: #7d97e0; --p-psd: #f0c94e;
+  --p-mdb: #63c078; --p-uniao: #98a5f0; --p-avante: #ec7ea0; --p-pode: #b38ae6; --p-pt: #f06a62; --p-pv: #9ed063; --p-pl: #8a9bc9; --p-outros: #5d7a70;
+  --wl-a: 56%; --wl-b: 70%; --ws: 74%; --uchoa: #39e07e;
+  --opp-forte: #fb923c; --opp-voto: #fcd34d; --opp-apoio: #c084fc;
+  --w1: #6d9bf2; --w2: #f29a52; --w3: #4fc4b3; --w4: #ea6f9a; --w5: #a687ea; --w6: #f0c84a; --w7: #72c46b; --w8: #e08560; --w9: #84c1f0; --w10: #c3c75a;
+  --font-display: "Sora", "Avenir Next", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --r: 14px;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; line-height: 1.45; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+
+.wrap { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px 28px; max-width: 1480px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.sunmark { width: 40px; height: 40px; flex: none; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(22px, 3vw, 30px); letter-spacing: -0.02em; margin: 0; line-height: 1.05; text-wrap: balance; }
+.sub { color: var(--muted); font-size: 13px; margin: 2px 0 0; }
+.stats { display: flex; gap: 20px; flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; }
+.stat b { font-family: var(--font-display); font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1; }
+.stat span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-top: 4px; }
+
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 16px; align-items: start; }
+@media (max-width: 1060px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+.mapcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 14px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; background: var(--surface-2); border-radius: 8px; padding: 3px; gap: 2px; }
+.seg button { border: 0; background: transparent; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.search { position: relative; flex: 1 1 220px; max-width: 320px; }
+.search input { width: 100%; padding: 8px 12px 8px 32px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); }
+.search svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--muted); }
+.results { position: absolute; z-index: 5; top: calc(100% + 4px); left: 0; right: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.18); max-height: 260px; overflow: auto; }
+.results button { display: flex; justify-content: space-between; gap: 8px; width: 100%; text-align: left; border: 0; background: transparent; padding: 8px 12px; }
+.results button:hover, .results button.on { background: var(--surface-2); }
+.results small { color: var(--muted); }
+
+.mapbox { position: relative; overflow: hidden; border-radius: 8px; background: var(--bg); height: clamp(300px, 62vh, 680px); touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+.mapbox.dragging { cursor: grabbing; }
+svg.map { display: block; width: 100%; height: 100%; }
+.mun, .inset rect { vector-effect: non-scaling-stroke; }
+.lab { font-family: var(--font-body); font-weight: 600; fill: var(--fg); stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; paint-order: stroke; pointer-events: none; text-anchor: middle; vector-effect: non-scaling-stroke; }
+.zoomctl { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.12); z-index: 2; }
+.zoomctl button { border: 0; background: transparent; width: 34px; height: 34px; font-size: 18px; line-height: 1; color: var(--fg); display: grid; place-items: center; }
+.zoomctl button + button { border-top: 1px solid var(--line); }
+.zoomctl button:hover { background: var(--surface-2); }
+.zoomctl svg { width: 16px; height: 16px; }
+.zoomhint { position: absolute; bottom: 8px; left: 10px; font-size: 11px; color: var(--muted); background: color-mix(in srgb, var(--surface) 85%, transparent); padding: 3px 8px; border-radius: 6px; pointer-events: none; }
+.zoomlvl { position: absolute; bottom: 8px; right: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); pointer-events: none; }
+.mun { fill: var(--land); stroke: var(--land-line); stroke-width: 0.6; transition: fill .2s, opacity .2s; cursor: pointer; }
+.mun:hover { stroke: var(--fg); stroke-width: 1.2; }
+.mun.sel { stroke: var(--sun); stroke-width: 2.4; }
+.mun.dim { opacity: .28; }
+.seat { fill: var(--fg); opacity: .55; pointer-events: none; }
+.seat.sel { fill: var(--sun); opacity: 1; stroke: var(--fg); stroke-width: 1; }
+.inset rect { fill: none; stroke: var(--line); stroke-dasharray: 3 3; }
+.inset text { fill: var(--muted); font-size: 10px; font-family: var(--font-body); }
+.tip { position: fixed; z-index: 60; pointer-events: none; background: var(--fg); color: var(--bg); padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.35; max-width: 260px; transform: translate(-50%, calc(-100% - 14px)); white-space: nowrap; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.tip.below { transform: translate(-50%, 18px); }
+.tip b { font-weight: 600; display: block; }
+.subbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.subbar label { font-size: 12px; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.subbar select { padding: 6px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); max-width: 100%; }
+.rank { display: flex; flex-direction: column; gap: 6px; }
+.rk { display: grid; grid-template-columns: 18px 1fr auto; gap: 2px 8px; align-items: center; font-size: 13px; }
+.rk .pos { font-family: var(--font-mono); font-size: 11px; color: var(--muted); }
+.rk .v { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
+.rk .track { grid-column: 2 / -1; height: 5px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.rk .track i { display: block; height: 100%; border-radius: 3px; }
+.badge-e { font-size: 10px; font-weight: 600; color: var(--ok); border: 1px solid currentColor; border-radius: 4px; padding: 0 5px; margin-left: 4px; }
+.badge-ne { font-size: 10px; color: var(--muted); margin-left: 4px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 12px; color: var(--muted); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+.legend button.lg { border: 1px solid transparent; background: none; display: inline-flex; align-items: center; gap: 6px; padding: 2px 6px; border-radius: 6px; color: var(--muted); font-size: 12px; }
+.legend button.lg:hover { border-color: var(--line); color: var(--fg); }
+.legend button.lg[aria-pressed="true"] { background: var(--sun-soft); border-color: var(--sun); color: var(--fg); }
+.legend .hint { flex-basis: 100%; font-size: 11px; }
+.opp-card { border: 1px solid rgba(251, 146, 60, .45); background: linear-gradient(120deg, rgba(251, 146, 60, .14), rgba(252, 211, 77, .06)); border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.opp-card .eyebrow { color: var(--opp-forte); }
+.em-total { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.em-total b { font-family: 'Sora', sans-serif; font-size: 22px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.em-list { display: flex; flex-direction: column; gap: 8px; }
+.em-row { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: 13px; }
+.em-row .who { font-weight: 600; min-width: 0; }
+.em-row .v { font-family: 'JetBrains Mono', monospace; font-size: 12px; white-space: nowrap; }
+.em-row .meta { grid-column: 1 / -1; font-size: 11px; color: var(--muted); }
+.em-row .track { grid-column: 1 / -1; height: 5px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+.em-row .track i { display: block; height: 100%; border-radius: 3px; }
+.em-more summary { cursor: pointer; font-size: 12px; color: var(--accent); margin-top: 4px; }
+.em-more[open] summary { margin-bottom: 8px; }
+#candbar .search { max-width: 380px; }
+.cand-head { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px; background: var(--surface-2); border-radius: 8px; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.kpis div { background: var(--surface-2); border-radius: 8px; padding: 8px 10px; }
+.kpis b { display: block; font-family: 'Sora', sans-serif; font-size: 18px; }
+.kpis span { font-size: 11px; color: var(--muted); }
+.vt td.bar { width: 30%; } .vt td.bar i { display: block; height: 6px; border-radius: 3px; background: var(--grad); }
+.opp-tag { font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; color: #1a0f02; white-space: nowrap; }
+.btn[aria-pressed="true"] { border-color: var(--opp-forte); background: rgba(251, 146, 60, .14); }
+.multi-sw { background: repeating-linear-gradient(45deg, #e3f7ef 0 3px, var(--land) 3px 6px) !important; }
+.hatch { background: repeating-linear-gradient(45deg, var(--p-outros) 0 2px, var(--land) 2px 5px) !important; }
+.tipo.prelim { background: transparent; color: var(--muted); border-style: dashed; }
+.legend .src { margin-left: auto; font-size: 11px; }
+
+aside.panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); display: flex; flex-direction: column; min-width: 0; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 24px); }
+@media (max-width: 1060px) { aside.panel { position: static; max-height: none; } }
+.tabs { display: flex; border-bottom: 1px solid var(--line); padding: 0 8px; }
+.tabs button { border: 0; background: transparent; padding: 12px 12px 10px; font-weight: 600; font-size: 13px; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--sun); }
+.tabs .count { font-family: var(--font-mono); font-size: 11px; font-weight: 400; margin-left: 4px; color: var(--muted); }
+.pane { padding: 16px; overflow: auto; display: flex; flex-direction: column; gap: 14px; min-height: 0; }
+
+.eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); font-weight: 600; }
+h2 { font-family: var(--font-display); font-size: 24px; font-weight: 700; margin: 2px 0 0; letter-spacing: -0.01em; text-wrap: balance; }
+h3 { font-size: 13px; font-weight: 600; margin: 0; }
+.mayor { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; padding: 12px; background: var(--surface-2); border-radius: 8px; }
+.avatar { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; color: #fff; font-size: 16px; }
+.mayor .name { font-weight: 600; font-size: 15px; }
+.mayor .meta { color: var(--muted); font-size: 12px; }
+.ig { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-top: 6px; font-size: 13px; }
+.ig a { font-weight: 600; text-decoration: none; }
+.ig a:hover { text-decoration: underline; }
+.ig svg { width: 14px; height: 14px; flex: none; color: var(--muted); }
+.flag { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: 1px 6px; border-radius: 4px; background: var(--sun-soft); color: var(--fg); }
+.flag.ok { background: transparent; color: var(--ok); border: 1px solid currentColor; }
+.igedit { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.igedit input { flex: 1 1 140px; min-width: 0; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.linkbtn { border: 0; background: none; padding: 0; color: var(--accent); font-size: 12px; text-decoration: underline; }
+.pill { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--surface-2); color: var(--fg); white-space: nowrap; }
+.pill i { width: 8px; height: 8px; border-radius: 50%; }
+.kv { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; font-size: 13px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+.mono { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+a { color: var(--accent); }
+.links { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid var(--line); background: var(--surface); padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 500; text-decoration: none; color: var(--fg); }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--muted); padding: 4px 8px; }
+.btn.ghost:hover { color: var(--danger); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+.sup { display: flex; flex-direction: column; gap: 8px; }
+.supitem { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; }
+.supitem .who { font-weight: 600; }
+.supitem .what { font-size: 12px; color: var(--muted); grid-column: 1 / -1; overflow-wrap: anywhere; }
+.tipo { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--sun-soft); color: var(--fg); }
+.empty { color: var(--muted); font-size: 13px; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; }
+
+form.add { display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--surface-2); border-radius: 8px; }
+form.add label { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
+form.add input, form.add select, form.add textarea { padding: 7px 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); width: 100%; }
+form.add textarea { resize: vertical; min-height: 54px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.msg { font-size: 12px; min-height: 16px; }
+.msg.err { color: var(--danger); } .msg.ok { color: var(--ok); }
+
+.deplist { display: flex; flex-direction: column; gap: 2px; }
+.dep { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; border: 1px solid transparent; background: transparent; text-align: left; width: 100%; }
+.dep:hover { background: var(--surface-2); }
+.dep[aria-pressed="true"] { background: var(--sun-soft); border-color: var(--sun); }
+.dep .num { font-family: var(--font-mono); font-size: 11px; color: var(--muted); width: 36px; }
+.dep .dn { font-weight: 600; }
+.dep .dp { font-size: 12px; color: var(--muted); }
+.dep .cnt { font-family: var(--font-mono); font-size: 12px; font-variant-numeric: tabular-nums; min-width: 28px; text-align: right; }
+.bar { height: 4px; border-radius: 2px; background: var(--accent); margin-top: 4px; }
+
+.tablewrap { overflow: auto; border: 1px solid var(--line); border-radius: 8px; max-height: 60vh; }
+table { border-collapse: collapse; width: 100%; font-size: 12px; }
+th, td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { position: sticky; top: 0; background: var(--surface-2); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+tbody tr { cursor: pointer; } tbody tr:hover { background: var(--surface-2); }
+td.num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.note { font-size: 12px; color: var(--muted); }
+.status { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); }
+.dot.live { background: var(--ok); }
+@media (max-width: 520px) { .kv { grid-template-columns: 96px 1fr; } .row2 { grid-template-columns: 1fr; } .legend .src { margin-left: 0; } }
+@media (prefers-reduced-motion: reduce) { .mun { transition: none; } }
+
+/* ===== camada tecnológica ===== */
+[hidden] { display: none !important; }
+body {
+  background:
+    radial-gradient(1100px 520px at 12% -8%, rgba(16, 185, 129, 0.22), transparent 60%),
+    radial-gradient(900px 480px at 100% 0%, rgba(34, 211, 238, 0.14), transparent 60%),
+    radial-gradient(800px 600px at 50% 110%, rgba(16, 185, 129, 0.10), transparent 60%),
+    var(--bg);
+  background-attachment: fixed;
+}
+body::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(rgba(110, 231, 183, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 231, 183, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px; mask-image: radial-gradient(ellipse at 50% 30%, #000 30%, transparent 80%); -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 30%, transparent 80%); }
+.wrap { position: relative; z-index: 1; gap: 18px; }
+h1 { font-weight: 800; letter-spacing: -0.03em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+h2 { font-family: var(--font-display); letter-spacing: -0.02em; }
+.sub { color: var(--muted); }
+.sunmark { filter: drop-shadow(0 0 14px rgba(52, 211, 153, 0.55)); }
+.eyebrow { font-family: var(--font-mono); font-weight: 500; letter-spacing: 0.12em; color: var(--accent); opacity: .85; }
+.stats { gap: 10px; }
+.stat { padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-width: 108px; }
+.stat b { font-size: 24px; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.stat span { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; }
+.stat:last-child { min-width: 0; display: flex; justify-content: center; }
+.dot.live { box-shadow: 0 0 0 0 rgba(74, 222, 128, .7); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, .6); } 70% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+
+.mapcard, aside.panel { background: var(--surface); border: 1px solid var(--line); backdrop-filter: blur(16px) saturate(130%); -webkit-backdrop-filter: blur(16px) saturate(130%); box-shadow: var(--glow); }
+.mapcard { position: relative; }
+.mapcard::before, aside.panel::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1px; background: linear-gradient(140deg, rgba(110, 231, 183, .55), rgba(34, 211, 238, .08) 40%, transparent 70%, rgba(52, 211, 153, .35)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none; }
+.mapbox { background: radial-gradient(circle at 50% 40%, rgba(16, 185, 129, .10), transparent 70%), var(--bg-2); border: 1px solid var(--line); }
+.mapbox::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(110, 231, 183, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(110, 231, 183, 0.05) 1px, transparent 1px); background-size: 28px 28px; }
+.mun { stroke: rgba(4, 16, 13, .9); }
+.mun:hover { stroke: #ecfeff; stroke-width: 1.4; filter: brightness(1.18); }
+.mun.sel { stroke: var(--sun); stroke-width: 2.4; filter: drop-shadow(0 0 6px rgba(103, 232, 249, .8)); }
+.seat { fill: #d1fae5; opacity: .5; }
+.seat.sel { fill: var(--sun); stroke: var(--bg); }
+.lab { fill: #ecfdf5; stroke: rgba(4, 16, 13, .92); }
+.inset rect { stroke: var(--line-strong); }
+
+.seg { background: rgba(4, 16, 13, .6); border: 1px solid var(--line); border-radius: 10px; }
+.seg button { border-radius: 7px; transition: color .15s, background .15s; }
+.seg button:hover { color: var(--fg); }
+.seg button[aria-pressed="true"] { background: var(--grad); color: var(--accent-ink); font-weight: 600; box-shadow: 0 4px 18px -4px rgba(16, 185, 129, .7); }
+.search input, .subbar select, #relq, form.add input, form.add select, form.add textarea, .igedit input { background: rgba(4, 16, 13, .65) !important; border: 1px solid var(--line) !important; color: var(--fg); }
+.search input:focus, .subbar select:focus, #relq:focus, form.add input:focus, form.add select:focus, form.add textarea:focus { outline: none; border-color: var(--accent) !important; box-shadow: 0 0 0 3px rgba(52, 211, 153, .18); }
+.results { background: var(--surface-solid); border-color: var(--line-strong); }
+.zoomctl { background: rgba(7, 26, 21, .85); border-color: var(--line-strong); backdrop-filter: blur(8px); }
+.zoomctl button:hover { background: rgba(52, 211, 153, .14); color: var(--accent); }
+.zoomhint { background: rgba(4, 16, 13, .7); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 10px; letter-spacing: .04em; }
+.zoomlvl { color: var(--accent); }
+.tip { background: rgba(6, 22, 18, .94); color: var(--fg); border: 1px solid var(--line-strong); backdrop-filter: blur(8px); box-shadow: 0 0 0 1px rgba(52, 211, 153, .12), 0 12px 32px rgba(0, 0, 0, .55); }
+.tip b { color: var(--accent); }
+
+.tabs { border-bottom-color: var(--line); }
+.tabs button { position: relative; transition: color .15s; }
+.tabs button:hover { color: var(--fg); }
+.tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: transparent; }
+.tabs button[aria-selected="true"]::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; border-radius: 2px; background: var(--grad); box-shadow: 0 0 10px rgba(52, 211, 153, .8); }
+.mayor { background: var(--grad-soft); border: 1px solid var(--line); }
+.avatar { box-shadow: 0 0 0 2px rgba(4, 16, 13, .8), 0 0 16px -2px currentColor; }
+.pill { background: rgba(4, 16, 13, .55); border: 1px solid var(--line); }
+.btn { background: rgba(4, 16, 13, .5); border-color: var(--line); transition: border-color .15s, box-shadow .15s; }
+.btn:hover { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(52, 211, 153, .12); }
+.btn.primary { background: var(--grad); border-color: transparent; color: var(--accent-ink); font-weight: 600; box-shadow: 0 6px 20px -6px rgba(16, 185, 129, .8); }
+.btn.ghost { background: transparent; }
+a { color: var(--accent); }
+.supitem, .empty { border-color: var(--line); background: rgba(4, 16, 13, .35); }
+.tipo { background: rgba(52, 211, 153, .14); color: var(--accent); border: 1px solid var(--line); }
+form.add { background: rgba(4, 16, 13, .45); border: 1px solid var(--line); }
+.dep:hover { background: rgba(52, 211, 153, .06); }
+.dep[aria-pressed="true"] { background: var(--grad-soft); border-color: var(--line-strong); }
+.bar { background: var(--grad); box-shadow: 0 0 8px rgba(52, 211, 153, .5); }
+.rk .track { background: rgba(4, 16, 13, .6); }
+.tablewrap { border-color: var(--line); background: rgba(4, 16, 13, .35); }
+th { background: #0a221c; color: var(--accent); font-family: var(--font-mono); font-weight: 500; }
+td { border-bottom-color: var(--line); }
+tbody tr:hover { background: rgba(52, 211, 153, .07); }
+.legend button.lg[aria-pressed="true"] { background: var(--grad-soft); border-color: var(--accent); }
+.flag { background: rgba(103, 232, 249, .12); color: var(--sun); }
+::selection { background: rgba(52, 211, 153, .35); }
+* { scrollbar-color: rgba(110, 231, 183, .25) transparent; }
+@media (prefers-reduced-motion: reduce) { .dot.live { animation: none; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="sunmark" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6ee7b7"/><stop offset=".55" stop-color="#10b981"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="11" fill="#04100d" stroke="url(#lg)" stroke-width="1.5"/><path d="M8 26c3-6 6-3 9-8s5-6 8-4 4 6 7 3" fill="none" stroke="url(#lg)" stroke-width="2.4" stroke-linecap="round"/><circle cx="17" cy="18" r="2.4" fill="#6ee7b7"/><circle cx="25" cy="14" r="2.4" fill="#22d3ee"/><circle cx="32" cy="17" r="1.8" fill="#34d399"/></svg>
+      <div>
+        <h1>Mapa de Apoios PE</h1>
+        <p class="sub">Deputados federais eleitos em 2026 e as prefeituras de Pernambuco que os apoiam</p>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+  </header>
+
+  <div class="grid">
+    <section class="mapcard" aria-label="Mapa de Pernambuco">
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Colorir mapa por">
+          <button type="button" id="mode-partido" aria-pressed="true">Partido do prefeito</button>
+          <button type="button" id="mode-votos" aria-pressed="false">Mais votados 2026</button>
+          <button type="button" id="mode-apoios" aria-pressed="false">Apoios registrados</button>
+          <button type="button" id="mode-opp" aria-pressed="false">Oportunidades</button>
+          <button type="button" id="mode-em" aria-pressed="false">Emendas</button>
+          <button type="button" id="mode-cand" aria-pressed="false">Votos por candidato</button>
+        </div>
+        <div class="search">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+          <input id="q" type="search" placeholder="Buscar município ou prefeito" autocomplete="off" aria-label="Buscar município ou prefeito">
+          <div class="results" id="results" hidden></div>
+        </div>
+      </div>
+      <div class="subbar" id="oppbar" hidden>
+        <label for="oppdep">Oportunidades para<select id="oppdep"><option value="">Todos os deputados eleitos</option></select></label>
+      </div>
+      <div class="subbar" id="candbar" hidden>
+        <div class="search">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="5"/><path d="m11 11 3.5 3.5"/></svg>
+          <input id="candq" type="search" placeholder="Digite o nome do deputado ou candidato" autocomplete="off" aria-label="Nome do candidato a deputado federal">
+          <div class="results" id="candres" hidden></div>
+        </div>
+        <div class="seg" role="group" aria-label="Medir por">
+          <button type="button" id="cm-v" aria-pressed="true">Nº de votos</button>
+          <button type="button" id="cm-p" aria-pressed="false">% da cidade</button>
+        </div>
+      </div>
+      <div class="subbar" id="embar" hidden>
+        <label for="emper">Período<select id="emper"></select></label>
+        <label for="emaut">Autor<select id="emaut"></select></label>
+        <label for="emdest">Destino<select id="emdest"><option value="pref">Prefeitura e fundos municipais</option><option value="all">Todos os favorecidos na cidade</option></select></label>
+      </div>
+      <div class="subbar" id="votosbar" hidden>
+        <div class="seg" role="group" aria-label="Agrupar votos por">
+          <button type="button" id="lv-mun" aria-pressed="true">Município</button>
+          <button type="button" id="lv-reg" aria-pressed="false">Região imediata</button>
+          <button type="button" id="lv-meso" aria-pressed="false">Mesorregião</button>
+        </div>
+        <label for="vdep">Ver força de<select id="vdep"><option value="">Mais votado em cada área</option></select></label>
+      </div>
+      <div class="mapbox" id="mapbox">
+        <svg class="map" id="map" role="img" aria-label="Mapa dos municípios de Pernambuco" preserveAspectRatio="xMidYMid meet"></svg>
+        <div class="zoomctl" role="group" aria-label="Zoom do mapa">
+          <button type="button" id="zin" aria-label="Aproximar">+</button>
+          <button type="button" id="zout" aria-label="Afastar">−</button>
+          <button type="button" id="zreset" aria-label="Ver o estado inteiro"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4"/></svg></button>
+        </div>
+        <span class="zoomhint" id="zoomhint">Role o mouse para dar zoom · arraste para mover</span>
+        <span class="zoomlvl" id="zoomlvl"></span>
+      </div>
+      <div class="tip" id="tip" hidden></div>
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <aside class="panel">
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" id="tab-mun" aria-selected="true">Município</button>
+        <button type="button" role="tab" id="tab-dep" aria-selected="false">Deputados<span class="count">25</span></button>
+        <button type="button" role="tab" id="tab-vot" aria-selected="false">Votos</button>
+        <button type="button" role="tab" id="tab-rel" aria-selected="false">Relatório</button>
+      </div>
+      <div class="pane" id="pane-mun"></div>
+      <div class="pane" id="pane-dep" hidden></div>
+      <div class="pane" id="pane-vot" hidden></div>
+      <div class="pane" id="pane-rel" hidden></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+const DATA = /*__DATA__*/null;
+const MUN = DATA.municipios, DEP = DATA.deputados;
+const VOT = DATA.votacao, CAND = VOT.candidatos;
+const LEVELS = { mun: { key: m => m.id, data: m => VOT.municipios[m.id], label: m => m.nome }, reg: { key: m => m.regiao, data: m => VOT.regioes[m.regiao], label: m => 'Região imediata de ' + m.regiao }, meso: { key: m => m.meso, data: m => VOT.meso[m.meso], label: m => m.meso } };
+const fmtN = v => Number(v || 0).toLocaleString('pt-BR');
+const pct = (v, t) => t ? (v / t * 100) : 0;
+const fmtP = x => x.toLocaleString('pt-BR', { maximumFractionDigits: 1, minimumFractionDigits: 1 }) + '%';
+const candName = s => CAND[s]?.nome || 'Candidato';
+/* votos de cada eleito somados por área */
+const depVotesAt = (() => { const cache = {}; return (lv, m, i) => { const k = lv + '|' + LEVELS[lv].key(m); if (!cache[k]) { const ids = lv === 'mun' ? [m.id] : MUN.filter(x => LEVELS[lv].key(x) === LEVELS[lv].key(m)).map(x => x.id); cache[k] = DEP.map((_, j) => ids.reduce((a, id) => a + ((VOT.eleitosPorMun[id] || [])[j] || 0), 0)); } return cache[k][i]; }; })();
+/* cor fixa por deputado eleito. Guilherme Uchoa Jr. = verde (pedido); os demais recebem matizes espaçados pelo ângulo de ouro, pulando a faixa do verde e alternando claro/escuro */
+const FIXED_COLOR = { '170002540312': 'var(--uchoa)' };
+const DEP_COLOR = (() => {
+  const wins = {}; for (const m of MUN) { const w = VOT.municipios[m.id]?.top[0]?.[0]; if (w) wins[w] = (wins[w] || 0) + 1; }
+  const ord = DEP.map(d => d.id).filter(id => !FIXED_COLOR[id]).sort((a, b) => (wins[b] || 0) - (wins[a] || 0) || (CAND[b]?.votosPE || 0) - (CAND[a]?.votosPE || 0));
+  const col = { ...FIXED_COLOR }; let k = 0;
+  ord.forEach((id, i) => { let h; do { h = Math.round((k++ * 137.508 + 215) % 360); } while (h > 62 && h < 185); col[id] = `hsl(${h} var(--ws) var(${i % 2 ? '--wl-b' : '--wl-a'}))`; });
+  return col;
+})();
+const HATCH = 'url(#hatch)';
+const isPrelim = a => /Levantamento/.test(a.tipo || '');
+const candColor = id => DEP_COLOR[id] || (() => { let h = 0; for (const ch of String(id)) h = (h * 31 + ch.charCodeAt(0)) % 360; return `hsl(${h} 22% 52%)`; })();
+function apoioPrincipal(list) {
+  list = list || []; const firm = list.filter(a => !isPrelim(a)); const use = firm.length ? firm : list;
+  return { ids: [...new Set(use.map(a => a.deputadoId))], prelim: !firm.length && list.length > 0, all: [...new Set(list.map(a => a.deputadoId))] };
+}
+function winnerPalette(lv) {
+  const c = {}; const seen = new Set();
+  for (const m of MUN) { const k = LEVELS[lv].key(m); if (seen.has(k)) continue; seen.add(k); const w = LEVELS[lv].data(m)?.top[0]?.[0]; if (w) c[w] = (c[w] || 0) + 1; }
+  const order = Object.entries(c).sort((a, b) => b[1] - a[1] || (CAND[b[0]]?.votosPE || 0) - (CAND[a[0]]?.votosPE || 0));
+  const col = {}; for (const [sq] of order) col[sq] = DEP_COLOR[sq] || HATCH;
+  return { order, col };
+}
+/* oportunidade: o mais votado na cidade não se elegeu e/ou a prefeitura apoiou só quem não se elegeu */
+function oppOf(m) {
+  if (!m.prefeito) return null;
+  const top = topOf(m.id), topNot = !!top && !top.c.eleito;
+  const ap = apoioPrincipal(apoiosByMun()[m.id]), apNot = ap.ids.length > 0 && ap.ids.every(id => !depById[id]);
+  if (!topNot && !apNot) return null;
+  const ev = VOT.eleitosPorMun[m.id] || [], total = VOT.municipios[m.id]?.total || 0;
+  let j = -1; ev.forEach((v, i) => { if (j < 0 || v > ev[j]) j = i; });
+  return { nivel: topNot && apNot ? 'forte' : topNot ? 'voto' : 'apoio', top, topNot, apNot, ap, best: j >= 0 ? { d: DEP[j], v: ev[j], p: pct(ev[j], total) } : null, total };
+}
+const OPP_LABEL = { forte: 'Forte', voto: 'Mais votado não eleito', apoio: 'Apoiou não eleito' };
+const oppTag = o => `<span class="opp-tag" style="background:var(--opp-${o.nivel})">${OPP_LABEL[o.nivel]}</span>`;
+const topOf = id => { const e = VOT.municipios[id]; if (!e || !e.top.length) return null; const [sq, v] = e.top[0]; return { sq, v, p: pct(v, e.total), c: CAND[sq] || {} }; };
+function rankHtml(entry, max = 5) {
+  if (!entry || !entry.top.length) return '<div class="empty">Sem dados de votação.</div>';
+  const top = entry.top.slice(0, max), best = top[0][1];
+  return `<div class="rank">${top.map(([sq, v], i) => { const c = CAND[sq] || {}; return `<div class="rk"><span class="pos">${i + 1}</span><span style="min-width:0"><button type="button" class="linkbtn" data-gocand="${esc(sq)}" title="Ver onde foi votado">${esc(c.nome)}</button> <span class="pill"><i style="background:${pcolor(c.partido)}"></i>${esc(c.partido)}</span>${c.eleito ? '<span class="badge-e">eleito</span>' : '<span class="badge-ne">não eleito</span>'}</span><span class="v">${fmtN(v)} · ${fmtP(pct(v, entry.total))}</span><span class="track"><i style="width:${v / best * 100}%;background:${pcolor(c.partido)}"></i></span></div>`; }).join('')}</div>`;
+}
+const munById = Object.fromEntries(MUN.map(m => [m.id, m]));
+const depById = Object.fromEntries(DEP.map(d => [d.id, d]));
+const CF = DATA.candFed || {};
+const candInfo = id => depById[id] || CF[id] || null;
+const PARTY_TOKEN = { PSDB:'psdb', PSB:'psb', PP:'pp', REPUBLICANOS:'rep', PSD:'psd', MDB:'mdb', 'UNIÃO':'uniao', AVANTE:'avante', PODE:'pode', PT:'pt', PV:'pv', PL:'pl' };
+const pcolor = p => `var(--p-${PARTY_TOKEN[p] || 'outros'})`;
+const VC = DATA.votosCand || {};
+const vcCache = {};
+function candVotes(sq) { if (vcCache[sq]) return vcCache[sq]; const a = VC[sq] || [], o = {}; for (let i = 0; i < a.length; i += 2) o[MUN[a[i]].id] = a[i + 1]; return vcCache[sq] = o; }
+const candVal = (sq, id) => { const v = candVotes(sq)[id] || 0; return state.cmetric === 'p' ? pct(v, VOT.municipios[id]?.total || 0) : v; };
+function candBins(sq) { let mx = 0; for (const m of MUN) mx = Math.max(mx, candVal(sq, m.id)); if (!mx) return [1, 2, 3]; const nice = x => { if (state.cmetric === 'p') return Math.max(0.1, Math.round(x * 10) / 10); const e = Math.pow(10, Math.floor(Math.log10(Math.max(1, x)))); return Math.max(1, Math.round(x / e) * e); }; return [nice(mx * 0.06), nice(mx * 0.18), nice(mx * 0.45)]; }
+const candFmt = x => state.cmetric === 'p' ? fmtP(x) : fmtN(Math.round(x));
+const isEl = sq => !!depById[sq] || !!CF[sq]?.eleito;
+const candList = () => Object.entries(CF).map(([sq, c]) => ({ sq, ...c })).sort((a, b) => b.votosPE - a.votosPE);
+const EM = DATA.emendas || { autores: [], mun: {} };
+const EM_TIPO = { I: 'Individual', P: 'Transferência especial', B: 'Bancada', C: 'Comissão', R: 'Relator' };
+const EM_ANOS = [...new Set(Object.values(EM.mun).flat().map(r => r[1]))].sort((a, b) => b - a);
+const emRange = () => { const [a, b] = state.emper.split('-').map(Number); return [a, b || a]; };
+const emPerLabel = () => { const [a, b] = emRange(); return a === b ? String(a) : `${a}–${b}`; };
+function emRows(id) { const [a, b] = emRange(), all = state.emdest === 'all'; const out = []; for (const r of EM.mun[id] || []) { if (r[1] < a || r[1] > b) continue; const v = r[3] + (all ? r[4] : 0); if (v > 0) out.push({ a: r[0], ano: r[1], t: r[2], v }); } return out; }
+function emByAuthor(id) { const o = {}; for (const r of emRows(id)) { const x = o[r.a] || (o[r.a] = { a: r.a, v: 0, anos: new Set(), tipos: new Set() }); x.v += r.v; x.anos.add(r.ano); x.tipos.add(r.t); } return Object.values(o).sort((p, q) => q.v - p.v); }
+const emSum = (id, aut = state.emaut) => emRows(id).reduce((s, r) => s + (aut === '' || r.a === +aut ? r.v : 0), 0);
+const emSq = i => EM.autores[i]?.sq || null;
+const emName = i => { const a = EM.autores[i]; if (!a) return 'Autor'; const c = a.sq && candInfo(a.sq); return c ? c.nome : a.nome; };
+const emColor = i => { const sq = emSq(i); return sq && DEP_COLOR[sq] ? candColor(sq) : 'var(--accent)'; };
+const emBadge = i => { const a = EM.autores[i]; if (!a) return ''; if (a.sq && depById[a.sq]) return '<span class="badge-e">eleito 2026</span>'; return { senador: '<span class="pill">senador(a)</span>', bancada: '<span class="pill">bancada</span>', comissao: '<span class="pill">comissão</span>', relator: '<span class="pill">relator</span>' }[a.cls] || ''; };
+const fmtR = v => v >= 1e6 ? 'R$ ' + (v / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mi' : v >= 1e3 ? 'R$ ' + Math.round(v / 1e3).toLocaleString('pt-BR') + ' mil' : 'R$ ' + fmtN(Math.round(v));
+const fmtRfull = v => Math.round(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+const emBins = () => state.emaut === '' ? [1e7, 2e7, 4e7] : [5e5, 1.5e6, 4e6];
+const emBinLabels = () => state.emaut === '' ? ['até R$ 10 mi', 'R$ 10–20 mi', 'R$ 20–40 mi', 'R$ 40 mi ou mais'] : ['até R$ 500 mil', 'R$ 500 mil–1,5 mi', 'R$ 1,5–4 mi', 'R$ 4 mi ou mais'];
+const emHeat = v => { if (v <= 0) return 'var(--land)'; const b = emBins(); return `var(--heat-${v < b[0] ? 1 : v < b[1] ? 2 : v < b[2] ? 3 : 4})`; };
+function emStateTotals() { const o = {}; for (const id in EM.mun) for (const r of emRows(id)) o[r.a] = (o[r.a] || 0) + r.v; return o; }
+function emDepStats(sq) { let v = 0, n = 0; const idx = EM.autores.map((a, i) => a.sq === sq ? i : -1).filter(i => i >= 0); if (!idx.length) return null; for (const id in EM.mun) { let s = 0; for (const r of emRows(id)) if (idx.includes(r.a)) s += r.v; if (s > 0) { v += s; n++; } } return { v, n }; }
+const TIPOS = ['Apoio declarado', 'Parceria / emenda', 'Aliança partidária', 'Em negociação', 'Levantamento abr/2025 (preliminar)'];
+
+const state = { cand: '', cmetric: 'v', emper: '2023-2026', emaut: '', emdest: 'pref', oppdep: '', afocus: null, vlevel: 'mun', vdep: '', vfocus: null, ig: {}, apoios: [], mode: 'partido', mun: null, dep: null, tab: 'mun', canWrite: null, db: null, live: false, loadErr: '' };
+
+const $ = s => document.querySelector(s);
+const useCap = name => { try { return Promise.resolve(window.claude?.use?.(name) ?? null).catch(() => null); } catch { return Promise.resolve(null); } };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safeUrl = u => /^https:\/\//i.test(String(u || '')) ? u : '';
+const initials = n => String(n || '?').split(' ').filter(w => w.length > 2).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
+const fmtCoord = v => v.toFixed(5).replace('.', ',');
+const mapsLink = m => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(`Prefeitura de ${m.nome} PE`);
+const coordLink = m => `https://www.google.com/maps/search/?api=1&query=${m.lat},${m.lng}`;
+
+const IG_ICON = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="2" y="2" width="12" height="12" rx="3.5"/><circle cx="8" cy="8" r="2.8"/><circle cx="11.6" cy="4.4" r=".6" fill="currentColor"/></svg>';
+const cleanHandle = h => String(h || '').trim().replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/^@/, '').replace(/[/?#].*$/, '');
+const validHandle = h => /^[A-Za-z0-9_.]{1,30}$/.test(h);
+const igOf = id => { const r = state.ig[id]; return r && validHandle(r.handle) ? r : null; };
+function apoiosByMun() { const o = {}; for (const a of state.apoios) (o[a.municipioId] ||= []).push(a); return o; }
+function apoiosByDep() { const o = {}; for (const a of state.apoios) (o[a.deputadoId] ||= []).push(a); return o; }
+
+/* ---------- mapa ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const svg = $('#map');
+const V = DATA.view;
+svg.setAttribute('viewBox', `0 0 ${V.w} ${V.h}`);
+const gMun = document.createElementNS(NS, 'g'), gSeat = document.createElementNS(NS, 'g'), gLab = document.createElementNS(NS, 'g');
+const pathEls = {}, seatEls = {}, labEls = {};
+for (const m of MUN) {
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', m.d); p.setAttribute('class', 'mun'); p.dataset.id = m.id;
+  p.setAttribute('tabindex', '-1');
+  gMun.appendChild(p); pathEls[m.id] = p;
+  const c = document.createElementNS(NS, 'circle');
+  c.setAttribute('cx', m.x); c.setAttribute('cy', m.y); c.setAttribute('r', 1.6); c.setAttribute('class', 'seat');
+  gSeat.appendChild(c); seatEls[m.id] = c;
+  const t = document.createElementNS(NS, 'text'); t.setAttribute('class', 'lab'); t.setAttribute('x', m.x); t.setAttribute('y', m.y); t.textContent = m.nome;
+  gLab.appendChild(t); labEls[m.id] = t;
+}
+const [ix, iy, iw, ih] = V.inset;
+const inset = document.createElementNS(NS, 'g'); inset.setAttribute('class', 'inset');
+inset.innerHTML = `<rect x="${ix}" y="${iy}" width="${iw}" height="${ih}" rx="6"></rect><text x="${ix + 6}" y="${iy + ih + 12}">Fernando de Noronha</text>`;
+const defs = document.createElementNS(NS, 'defs');
+defs.innerHTML = '<pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="5" height="5" style="fill:var(--land)"></rect><rect width="2" height="5" style="fill:var(--p-outros)"></rect></pattern><pattern id="multi" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" style="fill:var(--land)"></rect><rect width="3" height="6" style="fill:#e3f7ef"></rect></pattern>';
+svg.append(defs, inset, gMun, gSeat, gLab);
+
+const tip = $('#tip'), mapbox = $('#mapbox');
+document.body.appendChild(tip);
+svg.addEventListener('mousemove', e => {
+  const id = e.target.dataset?.id; if (!id) { tip.hidden = true; return; }
+  const m = munById[id], n = (apoiosByMun()[id] || []).length;
+  if (state.mode === 'votos') {
+    const lv = state.vlevel, ent = LEVELS[lv].data(m);
+    let body = '';
+    if (state.vdep !== '') { const i = +state.vdep, v = depVotesAt(lv, m, i); body = `${esc(DEP[i].nome)}: ${fmtN(v)} votos (${fmtP(pct(v, ent.total))})`; }
+    else body = ent.top.slice(0, 3).map(([sq, v], i) => `${i + 1}. ${esc(candName(sq))} · ${fmtN(v)}`).join('<br>');
+    tip.innerHTML = `<b>${esc(LEVELS[lv].label(m))}</b>${lv !== 'mun' ? esc(m.nome) + '<br>' : ''}${body}`;
+  } else if (state.mode === 'cand') {
+    if (!state.cand) tip.innerHTML = `<b>${esc(m.nome)}</b>Digite o nome de um candidato acima`;
+    else { const v = candVotes(state.cand)[id] || 0, t = VOT.municipios[id]?.total || 0, c = candInfo(state.cand);
+      tip.innerHTML = `<b>${esc(m.nome)}</b>${esc(c?.nome)}: <b>${fmtN(v)}</b> voto${v === 1 ? '' : 's'}${v ? ` (${fmtP(pct(v, t))} da cidade)` : ''}`; }
+  } else if (state.mode === 'em') {
+    const by = emByAuthor(id), tot = by.reduce((s, x) => s + x.v, 0);
+    tip.innerHTML = `<b>${esc(m.nome)}</b>Emendas pagas ${esc(emPerLabel())}: ${fmtR(tot)}<br>` + (state.emaut !== '' ? `${esc(emName(+state.emaut))}: ${fmtR(emSum(id))}` : by.slice(0, 3).map((x, i) => `${i + 1}. ${esc(emName(x.a))} · ${fmtR(x.v)}`).join('<br>') || 'Nenhuma emenda paga no período');
+  } else tip.innerHTML = `<b>${esc(m.nome)}</b>${m.prefeito ? esc(m.prefeito) + ' · ' + esc(m.partido) : 'Distrito estadual'}${igOf(id) ? '<br>@' + esc(igOf(id).handle) : ''}${n ? '<br>Apoia: ' + [...new Map((apoiosByMun()[id] || []).map(a => [a.deputadoId + (isPrelim(a) ? 'p' : ''), a])).values()].map(a => esc(candInfo(a.deputadoId)?.nome || 'Candidato') + (isPrelim(a) ? ' (prelim.)' : '')).join(', ') : ''}`;
+  if (drag?.moved) { tip.hidden = true; return; }
+  tip.hidden = false;
+  const w = tip.offsetWidth, h = tip.offsetHeight, vw = document.documentElement.clientWidth;
+  tip.style.left = Math.max(w / 2 + 8, Math.min(vw - w / 2 - 8, e.clientX)) + 'px';
+  tip.style.top = e.clientY + 'px';
+  tip.classList.toggle('below', e.clientY - h - 20 < 0);
+});
+svg.addEventListener('mouseleave', () => tip.hidden = true);
+svg.addEventListener('click', e => { if (suppressClick) { suppressClick = false; return; } const id = e.target.dataset?.id; if (id) selectMun(id); });
+
+/* ---------- zoom e arrasto ---------- */
+const FULL = { x: 0, y: 0, w: V.w, h: V.h };
+const vb = { ...FULL };
+const MAXZ = 14;
+let drag = null, suppressClick = false, anim = 0;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const zoomOf = () => FULL.w / vb.w;
+function clampVb() {
+  vb.w = Math.min(FULL.w, Math.max(FULL.w / MAXZ, vb.w)); vb.h = vb.w * FULL.h / FULL.w;
+  const padX = vb.w * 0.25, padY = vb.h * 0.25;
+  vb.x = Math.min(FULL.w - vb.w + padX, Math.max(-padX, vb.x)); vb.y = Math.min(FULL.h - vb.h + padY, Math.max(-padY, vb.y));
+  if (vb.w >= FULL.w) { vb.x = 0; vb.y = 0; }
+}
+function applyView() {
+  clampVb();
+  svg.setAttribute('viewBox', `${vb.x} ${vb.y} ${vb.w} ${vb.h}`);
+  const z = zoomOf(), rect = svg.getBoundingClientRect();
+  const unitPerPx = Math.max(vb.w / (rect.width || 1), vb.h / (rect.height || 1));
+  const fs = 11 * unitPerPx, showLab = z >= 2.2;
+  gLab.style.display = showLab ? '' : 'none';
+  if (showLab) for (const m of MUN) { const t = labEls[m.id]; t.setAttribute('font-size', fs); t.setAttribute('y', m.y - 5 * unitPerPx); }
+  for (const m of MUN) seatEls[m.id].setAttribute('r', (state.mun === m.id ? 4.5 : 2) * unitPerPx);
+  $('#zoomlvl').textContent = z > 1.05 ? z.toFixed(1).replace('.', ',') + '×' : '';
+  $('#zoomhint').hidden = z > 1.05;
+}
+function svgPoint(cx, cy) { const r = svg.getBoundingClientRect(); const s = Math.max(vb.w / r.width, vb.h / r.height); const offX = (r.width * s - vb.w) / 2, offY = (r.height * s - vb.h) / 2; return { x: vb.x + (cx - r.left) * s - offX, y: vb.y + (cy - r.top) * s - offY }; }
+function zoomAt(cx, cy, factor) {
+  cancelAnimationFrame(anim);
+  const p = svgPoint(cx, cy), nw = Math.min(FULL.w, Math.max(FULL.w / MAXZ, vb.w / factor)), k = nw / vb.w;
+  vb.x = p.x - (p.x - vb.x) * k; vb.y = p.y - (p.y - vb.y) * k; vb.w = nw; vb.h = nw * FULL.h / FULL.w; applyView();
+}
+function animateTo(t) {
+  cancelAnimationFrame(anim);
+  if (reduceMotion) { Object.assign(vb, t); applyView(); return; }
+  const s = { ...vb }, t0 = performance.now(), D = 420;
+  const step = now => { const k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3); for (const key of ['x', 'y', 'w', 'h']) vb[key] = s[key] + (t[key] - s[key]) * e; applyView(); if (k < 1) anim = requestAnimationFrame(step); };
+  anim = requestAnimationFrame(step);
+}
+function zoomToMun(id) {
+  const b = pathEls[id].getBBox(), w = Math.max(b.width * 3.2, b.height * 3.2 * FULL.w / FULL.h, FULL.w / 9);
+  const h = w * FULL.h / FULL.w; animateTo({ x: b.x + b.width / 2 - w / 2, y: b.y + b.height / 2 - h / 2, w, h });
+}
+mapbox.addEventListener('wheel', e => { e.preventDefault(); zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * (e.deltaMode === 1 ? 0.05 : 0.0018))); tip.hidden = true; }, { passive: false });
+svg.addEventListener('dblclick', e => { e.preventDefault(); zoomAt(e.clientX, e.clientY, e.shiftKey ? 1 / 2 : 2); });
+const pointers = new Map();
+mapbox.addEventListener('pointerdown', e => {
+  if (e.target.closest('.zoomctl')) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1) drag = { x: e.clientX, y: e.clientY, vx: vb.x, vy: vb.y, moved: false, id: e.pointerId };
+  else if (pointers.size === 2) { const [a, b] = [...pointers.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), moved: true }; }
+});
+window.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId) || !drag) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (drag.pinch && pointers.size === 2) {
+    const [a, b] = [...pointers.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+    zoomAt((a.x + b.x) / 2, (a.y + b.y) / 2, d / drag.pinch); drag.pinch = d; return;
+  }
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (!drag.moved && Math.hypot(dx, dy) < 5) return;
+  if (!drag.moved) { drag.moved = true; mapbox.classList.add('dragging'); try { mapbox.setPointerCapture(e.pointerId); } catch {} }
+  cancelAnimationFrame(anim);
+  const r = svg.getBoundingClientRect(), s = Math.max(vb.w / r.width, vb.h / r.height);
+  vb.x = drag.vx - dx * s; vb.y = drag.vy - dy * s; applyView();
+});
+const endPointer = e => {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.delete(e.pointerId);
+  if (drag?.moved) suppressClick = true;
+  if (pointers.size === 0) { drag = null; mapbox.classList.remove('dragging'); setTimeout(() => suppressClick = false, 0); }
+};
+window.addEventListener('pointerup', endPointer); window.addEventListener('pointercancel', endPointer);
+const centerOf = () => { const r = svg.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+$('#zin').addEventListener('click', () => zoomAt(...centerOf(), 1.8));
+$('#zout').addEventListener('click', () => zoomAt(...centerOf(), 1 / 1.8));
+$('#zreset').addEventListener('click', () => animateTo({ ...FULL }));
+window.addEventListener('resize', applyView);
+requestAnimationFrame(applyView);
+
+function paintMap() {
+  const byMun = apoiosByMun();
+  let pal = null, cb = null;
+  const depMuns = state.mode !== 'votos' && state.dep ? new Set(state.apoios.filter(a => a.deputadoId === state.dep).map(a => a.municipioId)) : null;
+  for (const m of MUN) {
+    const p = pathEls[m.id]; let fill, focusOff = false, prelimFill = false;
+    if (state.mode === 'partido') fill = m.partido ? pcolor(m.partido) : 'var(--land)';
+    else if (state.mode === 'votos') {
+      const ent = LEVELS[state.vlevel].data(m);
+      if (state.vdep !== '') { const sh = pct(depVotesAt(state.vlevel, m, +state.vdep), ent.total); fill = sh < 2 ? 'var(--land)' : `var(--heat-${sh < 5 ? 1 : sh < 10 ? 2 : sh < 20 ? 3 : 4})`; }
+      else { const w = ent.top[0]?.[0]; fill = (pal || (pal = winnerPalette(state.vlevel))).col[w] || 'var(--land)';
+        if (state.vfocus) focusOff = state.vfocus === 'ne' ? !!CAND[w]?.eleito : w !== state.vfocus; }
+    }
+    else if (state.mode === 'opp') {
+      const o = oppOf(m);
+      if (!o) { fill = 'var(--land)'; focusOff = true; }
+      else if (state.oppdep === '') fill = `var(--opp-${o.nivel})`;
+      else { const i = +state.oppdep, d = DEP[i];
+        if (o.ap.all.includes(d.id)) { fill = candColor(d.id); prelimFill = true; }
+        else { const sh = pct((VOT.eleitosPorMun[m.id] || [])[i] || 0, o.total); fill = sh < 2 ? 'var(--surface-2)' : `var(--heat-${sh < 5 ? 1 : sh < 10 ? 2 : sh < 20 ? 3 : 4})`; } }
+    }
+    else if (state.mode === 'em') fill = emHeat(emSum(m.id));
+    else if (state.mode === 'cand') { if (!state.cand) fill = 'var(--land)'; else { const v = candVal(state.cand, m.id), b = cb || (cb = candBins(state.cand)); fill = v <= 0 ? 'var(--land)' : `var(--heat-${v < b[0] ? 1 : v < b[1] ? 2 : v < b[2] ? 3 : 4})`; focusOff = v <= 0; } }
+    else { const ap = apoioPrincipal(byMun[m.id]); fill = !ap.ids.length ? 'var(--land)' : ap.ids.length > 1 ? 'url(#multi)' : candColor(ap.ids[0]);
+      prelimFill = ap.prelim; if (state.afocus) focusOff = !ap.all.includes(state.afocus); }
+    if (depMuns) fill = depMuns.has(m.id) ? 'var(--sun)' : 'var(--land)';
+    p.style.fill = fill;
+    p.style.fillOpacity = prelimFill ? '.5' : '';
+    p.style.stroke = state.mode === 'votos' && state.vlevel !== 'mun' ? 'color-mix(in srgb, var(--land-line) 35%, transparent)' : '';
+    p.classList.toggle('sel', state.mun === m.id);
+    p.classList.toggle('dim', (!!depMuns && !depMuns.has(m.id)) || focusOff);
+    seatEls[m.id].classList.toggle('sel', state.mun === m.id);
+  }
+  if (state.mun) gMun.appendChild(pathEls[state.mun]);
+  if (typeof applyView === 'function' && vb) applyView();
+  paintLegend();
+}
+
+function paintLegend() {
+  const L = $('#legend');
+  let html = '';
+  if (state.mode === 'votos') {
+    if (state.vdep !== '') html = ['menos de 2%', '2–5%', '5–10%', '10–20%', '20% ou mais'].map((t, i) => `<span><i style="background:${i ? `var(--heat-${i})` : 'var(--land)'}"></i>${t}</span>`).join('') + `<span>dos votos nominais para deputado federal</span>`;
+    else { const { order, col } = winnerPalette(state.vlevel); const unit = { mun: 'cidades', reg: 'regiões', meso: 'mesorregiões' }[state.vlevel];
+      const el = order.filter(([sq]) => CAND[sq]?.eleito), ne = order.filter(([sq]) => !CAND[sq]?.eleito);
+      html = el.map(([sq, c]) => `<button type="button" class="lg" data-focus="${esc(sq)}" aria-pressed="${state.vfocus === sq}"><i style="background:${col[sq]}"></i>${esc(candName(sq))} <span class="mono">${c}</span></button>`).join('')
+        + (ne.length ? `<button type="button" class="lg" data-focus="ne" aria-pressed="${state.vfocus === 'ne'}"><i class="hatch"></i>Não eleitos (${ne.length} candidatos) <span class="mono">${ne.reduce((a, x) => a + x[1], 0)}</span></button>` : '')
+        + `<span class="hint">Número = ${unit} onde ficou em 1º. Clique num nome para destacar só as ${unit} dele${state.vfocus ? '; clique de novo para ver todos' : ''}.${state.vfocus === 'ne' ? ' Não eleitos: ' + esc(ne.map(([sq, c]) => candName(sq) + ' (' + c + ')').join(', ')) : ''}</span>`; }
+  } else if (state.mode === 'opp') {
+    const os = MUN.map(m => [m, oppOf(m)]).filter(x => x[1]);
+    if (state.oppdep === '') {
+      const c = { forte: 0, voto: 0, apoio: 0 }; os.forEach(([, o]) => c[o.nivel]++);
+      html = ['forte', 'voto', 'apoio'].map(k => `<span><i style="background:var(--opp-${k})"></i>${{ forte: 'Forte: mais votado não eleito e prefeitura apoiou não eleito', voto: 'Mais votado na cidade não se elegeu', apoio: 'Prefeitura apoiou só quem não se elegeu' }[k]} <span class="mono">${c[k]}</span></span>`).join('')
+        + `<span class="hint">${os.length} prefeituras sem um deputado eleito como referência. Escolha um deputado acima para ver onde ele já tem voto para chegar à prefeitura.</span>`;
+    } else {
+      const i = +state.oppdep, d = DEP[i];
+      const rank = os.filter(([, o]) => !o.ap.all.includes(d.id)).map(([m, o]) => [m, pct((VOT.eleitosPorMun[m.id] || [])[i] || 0, o.total), (VOT.eleitosPorMun[m.id] || [])[i] || 0]).sort((a, b) => b[1] - a[1]);
+      const ja = os.filter(([, o]) => o.ap.all.includes(d.id)).length;
+      html = ['menos de 2%', '2–5%', '5–10%', '10–20%', '20% ou mais'].map((t, k) => `<span><i style="background:${k ? `var(--heat-${k})` : 'var(--surface-2)'}"></i>${t}</span>`).join('')
+        + (ja ? `<span><i style="background:${candColor(d.id)};opacity:.5"></i>Já apoia ${esc(d.nome)} <span class="mono">${ja}</span></span>` : '')
+        + `<span class="hint">Votos de ${esc(d.nome)} nas ${os.length} prefeituras de oportunidade. Melhores portas de entrada: ${rank.slice(0, 6).map(([m, p, v]) => `${esc(m.nome)} (${fmtP(p)}, ${fmtN(v)} votos)`).join(' · ') || 'nenhuma'}.</span>`;
+    }
+  } else if (state.mode === 'cand') {
+    if (!state.cand) html = `<span class="hint">Digite o nome de um deputado ou candidato a deputado federal na busca acima para ver em quais cidades ele teve voto e quantos.</span>`;
+    else { const c = candInfo(state.cand), b = candBins(state.cand), vv = candVotes(state.cand), n = Object.keys(vv).length;
+      const lab = [`menos de ${candFmt(b[0])}`, `${candFmt(b[0])}–${candFmt(b[1])}`, `${candFmt(b[1])}–${candFmt(b[2])}`, `${candFmt(b[2])} ou mais`];
+      html = lab.map((t, k) => `<span><i style="background:var(--heat-${k + 1})"></i>${t}</span>`).join('') + `<span><i style="background:var(--land)"></i>nenhum voto</span>`
+        + `<span class="hint"><b>${esc(c?.nome)}</b> (${esc(c?.partido)}${isEl(state.cand) ? ', eleito' : ', não eleito'}): <b>${fmtN(c?.votosPE)}</b> votos em ${n} de 185 cidades. ${state.cmetric === 'p' ? 'Cor = % dos votos nominais da cidade.' : 'Cor = número de votos.'} A lista completa está na aba Votos.</span>`; }
+  } else if (state.mode === 'em') {
+    const tots = emStateTotals(), sum = Object.values(tots).reduce((a, b) => a + b, 0);
+    const top = Object.entries(tots).sort((a, b) => b[1] - a[1]).slice(0, 8);
+    html = emBinLabels().map((t, k) => `<span><i style="background:var(--heat-${k + 1})"></i>${t}</span>`).join('') + `<span><i style="background:var(--land)"></i>nenhuma</span>`
+      + (state.emaut === '' ? `<span class="hint">Pago em ${esc(emPerLabel())} a ${state.emdest === 'all' ? 'favorecidos' : 'prefeituras e fundos municipais'} de PE: <b>${fmtRfull(sum)}</b>. Maiores autores (clique para ver no mapa):</span>`
+        + top.map(([a, v]) => `<button type="button" class="lg" data-emaut="${a}"><i style="background:${emColor(+a)}"></i>${esc(emName(+a))} <span class="mono">${fmtR(v)}</span></button>`).join('')
+        : `<span class="hint">${esc(emName(+state.emaut))}: <b>${fmtRfull(tots[state.emaut] || 0)}</b> pagos em ${MUN.filter(m => emSum(m.id) > 0).length} cidades (${esc(emPerLabel())}).</span><button class="btn ghost" type="button" id="emclear">Ver todos os autores</button>`);
+  } else if (state.dep) {
+    const d = depById[state.dep], n = new Set(state.apoios.filter(a => a.deputadoId === state.dep).map(a => a.municipioId)).size;
+    html = `<span><i style="background:var(--sun)"></i>Prefeituras que apoiam ${esc(d.nome)} (${n})</span><button class="btn ghost" type="button" id="cleardep">Limpar filtro</button>`;
+  } else if (state.mode === 'partido') {
+    const counts = {}; for (const m of MUN) if (m.partido) { const k = PARTY_TOKEN[m.partido] ? m.partido : 'Outros'; counts[k] = (counts[k] || 0) + 1; }
+    html = Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([p, n]) => `<span><i style="background:${p === 'Outros' ? 'var(--p-outros)' : pcolor(p)}"></i>${esc(p === 'UNIÃO' ? 'União' : p)} <span class="mono">${n}</span></span>`).join('');
+  } else {
+    const byMun = apoiosByMun(), cnt = {}; let multi = 0, none = 0;
+    for (const m of MUN) { if (!m.prefeito) continue; const ap = apoioPrincipal(byMun[m.id]); if (!ap.all.length) { none++; continue; } if (ap.ids.length > 1) multi++; for (const id of ap.all) cnt[id] = (cnt[id] || 0) + 1; }
+    const order = Object.entries(cnt).sort((a, b) => b[1] - a[1] || (candInfo(b[0])?.votosPE || 0) - (candInfo(a[0])?.votosPE || 0));
+    html = order.length ? order.map(([id, c]) => { const ci = candInfo(id); return `<button type="button" class="lg" data-afocus="${esc(id)}" aria-pressed="${state.afocus === id}"><i style="background:${candColor(id)}"></i>${esc(ci?.nome || 'Candidato')}${depById[id] ? '' : '*'} <span class="mono">${c}</span></button>`; }).join('')
+      + (multi ? `<span><i class="multi-sw"></i>Mais de um deputado <span class="mono">${multi}</span></span>` : '')
+      + `<span><i style="background:var(--land)"></i>Sem apoio registrado <span class="mono">${none}</span></span>`
+      + `<span class="hint">Número = prefeituras com apoio a esse deputado. Tom mais apagado = só levantamento preliminar (abr/2025). * não eleito. Clique num nome para destacar as prefeituras dele${state.afocus ? '; clique de novo para ver todas' : ''}.</span>`
+      : `<span class="hint">Nenhum apoio registrado ainda. Abra uma cidade e use "Registrar apoio a um deputado".</span>`;
+  }
+  L.innerHTML = html + `<span class="src">Prefeitos: TSE 2024 · Deputados e votação: TSE 2026 · Malha: IBGE${state.mode === 'em' ? ' · Emendas: Portal da Transparência (CGU), valores pagos, atualizado em ' + esc(EM.atualizado || '') : ''}</span>`;
+  L.querySelectorAll('[data-emaut]').forEach(btn => btn.addEventListener('click', () => { state.emaut = btn.dataset.emaut; fillEmAut(); renderAll(); }));
+  $('#emclear')?.addEventListener('click', () => { state.emaut = ''; fillEmAut(); renderAll(); });
+  $('#cleardep')?.addEventListener('click', () => { state.dep = null; renderAll(); });
+  L.querySelectorAll('[data-afocus]').forEach(btn => btn.addEventListener('click', () => { state.afocus = state.afocus === btn.dataset.afocus ? null : btn.dataset.afocus; paintMap(); }));
+  L.querySelectorAll('[data-focus]').forEach(btn => btn.addEventListener('click', () => { state.vfocus = state.vfocus === btn.dataset.focus ? null : btn.dataset.focus; paintMap(); }));
+}
+
+for (const mode of ['partido', 'votos', 'apoios', 'opp', 'em', 'cand']) $('#mode-' + mode).addEventListener('click', () => {
+  state.mode = mode; state.dep = null; state.vfocus = null; state.afocus = null;
+  for (const k of ['partido', 'votos', 'apoios', 'opp', 'em', 'cand']) $('#mode-' + k).setAttribute('aria-pressed', k === mode);
+  $('#votosbar').hidden = mode !== 'votos'; $('#oppbar').hidden = mode !== 'opp'; $('#embar').hidden = mode !== 'em'; $('#candbar').hidden = mode !== 'cand';
+  if (mode === 'cand') { state.tab = 'vot'; for (const k of ['mun', 'dep', 'vot', 'rel']) { $('#tab-' + k).setAttribute('aria-selected', k === 'vot'); $('#pane-' + k).hidden = k !== 'vot'; } setTimeout(() => $('#candq').focus(), 0); }
+  renderAll();
+});
+for (const lv of ['mun', 'reg', 'meso']) $('#lv-' + lv).addEventListener('click', () => {
+  state.vlevel = lv; state.vfocus = null; for (const k of ['mun', 'reg', 'meso']) $('#lv-' + k).setAttribute('aria-pressed', k === lv); renderAll();
+});
+$('#vdep').innerHTML += DEP.map((d, i) => ({ d, i })).sort((a, b) => b.d.votosPE - a.d.votosPE).map(({ d, i }) => `<option value="${i}">${esc(d.nome)} (${esc(d.partido)}) · ${fmtN(d.votosPE)} votos</option>`).join('');
+$('#oppdep').innerHTML += DEP.map((d, i) => ({ d, i })).sort((a, b) => a.d.nome.localeCompare(b.d.nome)).map(({ d, i }) => `<option value="${i}">${esc(d.nome)} (${esc(d.partido)})</option>`).join('');
+$('#emper').innerHTML = `<option value="2023-2026">2023–2026 (legislatura atual)</option><option value="${EM_ANOS[EM_ANOS.length - 1]}-${EM_ANOS[0]}">Todos os anos (${EM_ANOS[EM_ANOS.length - 1]}–${EM_ANOS[0]})</option>` + EM_ANOS.map(a => `<option value="${a}">${a}</option>`).join('');
+function fillEmAut() {
+  const tots = emStateTotals(), ids = Object.keys(tots).map(Number).sort((a, b) => tots[b] - tots[a]);
+  const el = ids.filter(i => emSq(i) && depById[emSq(i)]), ot = ids.filter(i => !(emSq(i) && depById[emSq(i)]));
+  if (state.emaut !== '' && !tots[state.emaut]) state.emaut = '';
+  const opt = i => `<option value="${i}"${String(i) === state.emaut ? ' selected' : ''}>${esc(emName(i))} · ${fmtR(tots[i])}</option>`;
+  $('#emaut').innerHTML = `<option value="">Todos os autores</option><optgroup label="Deputados eleitos em 2026">${el.map(opt).join('')}</optgroup><optgroup label="Outros parlamentares, bancada e comissões">${ot.map(opt).join('')}</optgroup>`;
+}
+fillEmAut();
+$('#emper').addEventListener('change', e => { state.emper = e.target.value; fillEmAut(); renderAll(); });
+$('#emaut').addEventListener('change', e => { state.emaut = e.target.value; renderAll(); });
+$('#emdest').addEventListener('change', e => { state.emdest = e.target.value; fillEmAut(); renderAll(); });
+const candq = $('#candq'), candres = $('#candres'); let chits = [], chi = 0;
+const nrm = s => String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+function renderCHits() { candres.innerHTML = chits.map((c, i) => `<button type="button" data-sq="${esc(c.sq)}" class="${i === chi ? 'on' : ''}"><span>${esc(c.nome)} <span class="pill">${esc(c.partido)}</span>${c.eleito ? ' <span class="badge-e">eleito</span>' : ''}</span><small>${fmtN(c.votosPE)} votos</small></button>`).join(''); candres.hidden = !chits.length; }
+candq.addEventListener('input', () => { const t = nrm(candq.value.trim()); chi = 0; chits = t ? candList().filter(c => nrm(c.nome).includes(t) || String(c.numero) === t).slice(0, 15) : candList().slice(0, 15); renderCHits(); });
+candq.addEventListener('focus', () => { if (!candq.value) { chits = candList().slice(0, 15); renderCHits(); } });
+candq.addEventListener('keydown', e => { if (!chits.length) return; if (e.key === 'ArrowDown') { chi = (chi + 1) % chits.length; renderCHits(); e.preventDefault(); } if (e.key === 'ArrowUp') { chi = (chi - 1 + chits.length) % chits.length; renderCHits(); e.preventDefault(); } if (e.key === 'Enter') { pickCand(chits[chi].sq); e.preventDefault(); } if (e.key === 'Escape') candres.hidden = true; });
+candres.addEventListener('click', e => { const b = e.target.closest('button'); if (b) pickCand(b.dataset.sq); });
+document.addEventListener('click', e => { if (!e.target.closest('#candbar .search')) candres.hidden = true; });
+function pickCand(sq) { state.cand = sq; candq.value = candInfo(sq)?.nome || ''; chits = []; candres.hidden = true; candq.blur(); if (state.tab !== 'vot') setTab('vot'); else renderAll(); }
+for (const k of ['v', 'p']) $('#cm-' + k).addEventListener('click', () => { state.cmetric = k; for (const j of ['v', 'p']) $('#cm-' + j).setAttribute('aria-pressed', j === k); renderAll(); });
+$('#oppdep').addEventListener('change', e => { state.oppdep = e.target.value; renderAll(); });
+$('#vdep').addEventListener('change', e => { state.vdep = e.target.value; state.vfocus = null; renderAll(); });
+
+/* ---------- busca ---------- */
+const norm = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const q = $('#q'), results = $('#results');
+let hits = [], hi = 0;
+function renderHits() {
+  results.innerHTML = hits.map((m, i) => `<button type="button" data-id="${m.id}" class="${i === hi ? 'on' : ''}"><span>${esc(m.nome)}</span><small>${esc(m.prefeito || '')}</small></button>`).join('');
+  results.hidden = !hits.length;
+}
+q.addEventListener('input', () => {
+  const t = norm(q.value.trim()); hi = 0;
+  hits = t ? MUN.filter(m => norm(m.nome).includes(t) || norm(m.prefeito).includes(t) || norm(m.prefeitoNome).includes(t) || norm(igOf(m.id)?.handle).includes(t.replace(/^@/, ''))).slice(0, 12) : [];
+  renderHits();
+});
+q.addEventListener('keydown', e => {
+  if (!hits.length) return;
+  if (e.key === 'ArrowDown') { hi = (hi + 1) % hits.length; renderHits(); e.preventDefault(); }
+  if (e.key === 'ArrowUp') { hi = (hi - 1 + hits.length) % hits.length; renderHits(); e.preventDefault(); }
+  if (e.key === 'Enter') { pick(hits[hi].id); e.preventDefault(); }
+  if (e.key === 'Escape') { results.hidden = true; }
+});
+results.addEventListener('click', e => { const b = e.target.closest('button'); if (b) pick(b.dataset.id); });
+document.addEventListener('click', e => { if (!e.target.closest('.search')) results.hidden = true; });
+function pick(id) { q.value = ''; hits = []; results.hidden = true; selectMun(id); zoomToMun(id); }
+
+/* ---------- abas ---------- */
+function setTab(t) {
+  state.tab = t;
+  for (const k of ['mun', 'dep', 'vot', 'rel']) { $('#tab-' + k).setAttribute('aria-selected', k === t); $('#pane-' + k).hidden = k !== t; }
+  renderAll();
+}
+for (const k of ['mun', 'dep', 'vot', 'rel']) $('#tab-' + k).addEventListener('click', () => setTab(k));
+
+function selectMun(id) { state.mun = id; setTab('mun'); paintMap(); }
+
+/* ---------- painel: município ---------- */
+function depOptions() { const others = Object.entries(CF).filter(([id]) => !depById[id]).sort((a, b) => b[1].votosPE - a[1].votosPE); return `<optgroup label="Eleitos em 2026">${DEP.map(d => `<option value="${d.id}">${esc(d.nome)} (${esc(d.partido)})</option>`).join('')}</optgroup><optgroup label="Não eleitos">${others.map(([id, c]) => `<option value="${id}">${esc(c.nome)} (${esc(c.partido)}) · ${fmtN(c.votosPE)} votos</option>`).join('')}</optgroup>`; }
+
+function renderMun() {
+  const P = $('#pane-mun');
+  if (!state.mun) {
+    P.innerHTML = `<div><div class="eyebrow">Comece aqui</div><h2>Escolha um município</h2></div>
+      <p class="note">Clique em qualquer cidade no mapa ou use a busca. Você verá o prefeito, a localização da sede e os deputados federais que a prefeitura apoia.</p>
+      <div class="empty">Dica: na aba <b>Deputados</b>, clique em um nome para ver no mapa todas as prefeituras que o apoiam.</div>`;
+    return;
+  }
+  const m = munById[state.mun];
+  const list = (apoiosByMun()[m.id] || []).sort((a, b) => (b.criadoEm || 0) - (a.criadoEm || 0));
+  const mayor = m.prefeito ? `
+    <div class="mayor">
+      <div class="avatar" style="background:${pcolor(m.partido)}">${esc(initials(m.prefeito))}</div>
+      <div style="min-width:0">
+        <div class="eyebrow">Prefeito(a) 2025–2028</div>
+        <div class="name">${esc(m.prefeito)} <span class="pill"><i style="background:${pcolor(m.partido)}"></i>${esc(m.partido)}</span></div>
+        <div class="meta">${esc(m.prefeitoNome)}</div>
+        ${igBlock(m)}
+      </div>
+    </div>` : `<div class="empty">Fernando de Noronha é distrito estadual: é administrado pelo Governo de Pernambuco e não tem prefeito.</div>`;
+  P.innerHTML = `
+    <div><div class="eyebrow">${esc(m.regiao)} · ${esc(m.meso)}</div><h2>${esc(m.nome)}</h2></div>
+    ${mayor}
+    ${(() => { const o = oppOf(m); if (!o) return ''; return `<div class="opp-card"><div class="eyebrow">Oportunidade de apoio · ${oppTag(o)}</div>
+      ${o.topNot ? `<div>O mais votado aqui, <b>${esc(o.top.c.nome)}</b> (${esc(o.top.c.partido)}), <b>não se elegeu</b>: ${fmtN(o.top.v)} votos (${fmtP(o.top.p)}).</div>` : ''}
+      ${o.apNot ? `<div>A prefeitura apoiou ${o.ap.ids.map(id => '<b>' + esc(candInfo(id)?.nome || 'candidato') + '</b>').join(', ')}, que não se elegeu${o.ap.prelim ? ' (levantamento preliminar)' : ''}.</div>` : ''}
+      ${(() => { const e = emByAuthor(m.id).find(x => emSq(x.a) && depById[emSq(x.a)]); return e ? `<div>Eleito 2026 que mais mandou emendas para cá (${esc(emPerLabel())}): <b>${esc(emName(e.a))}</b>, ${fmtR(e.v)}.</div>` : ''; })()}
+      ${o.best ? `<div>Entre os eleitos, quem teve mais votos aqui foi <b>${esc(o.best.d.nome)}</b> (${esc(o.best.d.partido)}): ${fmtN(o.best.v)} votos (${fmtP(o.best.p)}).</div>` : ''}
+    </div>`; })()}
+    ${topOf(m.id) ? `<div class="mayor" style="background:var(--sun-soft)"><div class="avatar" style="background:${pcolor(topOf(m.id).c.partido)}">1º</div><div style="min-width:0"><div class="eyebrow">Mais votado para deputado federal 2026</div><div class="name">${esc(topOf(m.id).c.nome)} <span class="pill"><i style="background:${pcolor(topOf(m.id).c.partido)}"></i>${esc(topOf(m.id).c.partido)}</span>${topOf(m.id).c.eleito ? '<span class="badge-e">eleito</span>' : '<span class="badge-ne">não eleito</span>'}</div><div class="meta">${fmtN(topOf(m.id).v)} votos · ${fmtP(topOf(m.id).p)} dos votos nominais da cidade</div></div></div>` : ''}
+    <dl class="kv">
+      ${m.vice ? `<dt>Vice</dt><dd>${esc(m.vice)} (${esc(m.vicePartido)})</dd>` : ''}
+      ${m.coligacao ? `<dt>Coligação</dt><dd>${esc(m.coligacao)}</dd>` : ''}
+      ${m.suplementar ? `<dt>Eleição</dt><dd>Suplementar de 4/5/2025</dd>` : ''}
+      <dt>Sede (lat, long)</dt><dd class="mono">${fmtCoord(m.lat)}, ${fmtCoord(m.lng)}</dd>
+      <dt>Código IBGE</dt><dd class="mono">${esc(m.id)}</dd>
+    </dl>
+    <div class="links">
+      <a class="btn" href="${mapsLink(m)}" target="_blank" rel="noopener">Ver prefeitura no Google Maps</a>
+      <a class="btn" href="${coordLink(m)}" target="_blank" rel="noopener">Abrir coordenadas</a>
+    </div>
+    <div class="sup">
+      <h3>Mais votados para deputado federal em 2026</h3>
+      ${rankHtml(VOT.municipios[m.id])}
+      <p class="note">${fmtN(VOT.municipios[m.id]?.total)} votos nominais válidos na cidade.</p>
+      <h3>Na região imediata de ${esc(m.regiao)}</h3>
+      ${rankHtml(VOT.regioes[m.regiao])}
+    </div>
+    ${emPanel(m)}
+    <div class="sup">
+      <h3>Deputados federais apoiados <span class="mono" style="color:var(--muted)">${list.length}</span></h3>
+      ${list.length ? list.map(a => { const d = candInfo(a.deputadoId); const u = safeUrl(a.fonte); return `
+        <div class="supitem">
+          <div><span class="who">${esc(d ? d.nome : 'Candidato removido')}</span> <span class="pill">${esc(d ? d.partido : '')}</span>${d && !depById[a.deputadoId] ? '<span class="badge-ne">não eleito</span>' : ''}</div>
+          <span class="tipo${/Levantamento/.test(a.tipo) ? ' prelim' : ''}">${esc(a.tipo)}</span>
+          ${(u || a.obs) ? `<div class="what">${a.obs ? esc(a.obs) : ''}${u ? `${a.obs ? '<br>' : ''}<a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https:\/\/(www\.)?/, ''))}</a>` : ''}</div>` : ''}
+          ${state.canWrite ? `<div style="grid-column:1/-1;display:flex;justify-content:flex-end"><button type="button" class="btn ghost" data-del="${esc(a._id)}">Remover</button></div>` : ''}
+        </div>`; }).join('') : `<div class="empty">${state.live ? 'Nenhum apoio registrado para esta prefeitura ainda.' : (state.loadErr || 'Carregando apoios…')}</div>`}
+    </div>
+    ${m.prefeito ? addForm() : ''}`;
+  P.querySelectorAll('[data-del]').forEach(b => b.addEventListener('click', () => askDelete(b)));
+  P.querySelectorAll('[data-gocand]').forEach(b => b.addEventListener('click', () => goCand(b.dataset.gocand)));
+  wireIg(P, m);
+  const ep = P.querySelector('#emper-p'); if (ep) { ep.value = state.emper; ep.addEventListener('change', () => { state.emper = ep.value; $('#emper').value = ep.value; fillEmAut(); renderAll(); }); }
+  const f = P.querySelector('form.add'); if (f) f.addEventListener('submit', submitApoio);
+}
+
+function emPanel(m) {
+  const by = emByAuthor(m.id), tot = by.reduce((s, x) => s + x.v, 0), max = by[0]?.v || 1;
+  const row = x => `<div class="em-row"><span class="who">${esc(emName(x.a))} ${emBadge(x.a)}</span><span class="v">${fmtRfull(x.v)}</span>
+    <span class="meta">${[...x.tipos].map(t => EM_TIPO[t]).join(' · ')} · ${[...x.anos].sort().join(', ')}</span><span class="track"><i style="width:${Math.max(2, x.v / max * 100)}%;background:${emColor(x.a)}"></i></span></div>`;
+  return `<div class="sup">
+    <h3>Emendas parlamentares recebidas</h3>
+    <label style="font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center">Período<select id="emper-p" style="padding:4px 8px;border:1px solid var(--line);border-radius:8px;background:rgba(4,16,13,.65);color:var(--fg)">${$('#emper').innerHTML}</select></label>
+    ${by.length ? `<div class="em-total"><b>${fmtRfull(tot)}</b><span class="note">pagos em ${esc(emPerLabel())} por ${by.length} autor${by.length > 1 ? 'es' : ''} · ${state.emdest === 'all' ? 'todos os favorecidos na cidade' : 'prefeitura e fundos municipais'}</span></div>
+      <div class="em-list">${by.slice(0, 8).map(row).join('')}</div>
+      ${by.length > 8 ? `<details class="em-more"><summary>Ver os outros ${by.length - 8} autores</summary><div class="em-list">${by.slice(8).map(row).join('')}</div></details>` : ''}`
+      : `<div class="empty">Nenhuma emenda paga para esta prefeitura em ${esc(emPerLabel())}.</div>`}
+    <p class="note">Valores efetivamente pagos (não só empenhados), segundo o Portal da Transparência (CGU). Inclui transferências especiais ("emendas Pix"), bancada e comissões.</p>
+  </div>`;
+}
+
+let igEditing = null;
+function igBlock(m) {
+  const r = igOf(m.id);
+  if (igEditing === m.id) return `<form class="igedit" id="igform"><input id="ig-in" placeholder="@usuario ou link do perfil" value="${r ? '@' + esc(r.handle) : ''}" aria-label="Instagram do prefeito"><button class="btn primary" type="submit">Salvar</button><button class="btn" type="button" id="ig-cancel">Cancelar</button><span class="msg" id="ig-msg" style="flex-basis:100%"></span></form>`;
+  const edit = state.db && state.canWrite ? `<button type="button" class="linkbtn" id="ig-edit">${r ? 'Editar' : 'Adicionar Instagram'}</button>` : '';
+  if (!r) return `<div class="ig">${IG_ICON}<span style="color:var(--muted)">Instagram não cadastrado</span> ${edit}</div>`;
+  const conf = r.status === 'confirmado';
+  return `<div class="ig">${IG_ICON}<a href="https://www.instagram.com/${encodeURIComponent(r.handle)}/" target="_blank" rel="noopener">@${esc(r.handle)}</a>
+    <span class="flag ${conf ? 'ok' : ''}">${conf ? 'Confirmado' : 'A confirmar'}</span>
+    ${edit}${!conf && state.db && state.canWrite ? ` <button type="button" class="linkbtn" id="ig-confirm">Marcar como confirmado</button>` : ''}</div>`;
+}
+function wireIg(P, m) {
+  P.querySelector('#ig-edit')?.addEventListener('click', () => { igEditing = m.id; renderMun(); P.querySelector('#ig-in')?.focus(); });
+  P.querySelector('#ig-cancel')?.addEventListener('click', () => { igEditing = null; renderMun(); });
+  P.querySelector('#ig-confirm')?.addEventListener('click', async e => {
+    e.target.disabled = true;
+    try { await state.db.collection('instagram').doc(m.id).set({ ...state.ig[m.id], status: 'confirmado', atualizadoEm: Date.now() }); }
+    catch { e.target.disabled = false; e.target.textContent = 'Não foi possível salvar'; }
+  });
+  P.querySelector('#igform')?.addEventListener('submit', async e => {
+    e.preventDefault();
+    const msg = P.querySelector('#ig-msg'), raw = P.querySelector('#ig-in').value, h = cleanHandle(raw);
+    msg.className = 'msg';
+    try {
+      if (!raw.trim()) { await state.db.collection('instagram').doc(m.id).delete(); igEditing = null; renderAll(); return; }
+      if (!validHandle(h)) { msg.textContent = 'Use só letras, números, ponto e sublinhado (até 30).'; msg.classList.add('err'); return; }
+      msg.textContent = 'Salvando…';
+      await state.db.collection('instagram').doc(m.id).set({ handle: h, status: 'confirmado', fonte: 'manual', atualizadoEm: Date.now() });
+      igEditing = null; renderAll();
+    } catch (err) { msg.textContent = err?.code === 'invalid_argument' ? 'Você não tem permissão para salvar aqui.' : 'Não foi possível salvar. Tente de novo.'; msg.classList.add('err'); }
+  });
+}
+
+function addForm() {
+  if (state.snap) return `<p class="note">Esta é uma cópia estática dos apoios de ${esc(state.snap)}. Para registrar novos apoios, use a versão do site no claude.ai.</p>`;
+  if (state.canWrite === false) return `<p class="note">Você pode ver os apoios, mas não tem permissão para registrar novos.</p>`;
+  if (!state.db) return '';
+  return `<form class="add" id="addform" novalidate>
+    <h3>Registrar apoio a um deputado</h3>
+    <label for="f-dep">Candidato a deputado federal<select id="f-dep" required><option value="">Selecione…</option>${depOptions()}</select></label>
+    <label for="f-tipo">Tipo de vínculo<select id="f-tipo">${TIPOS.map(t => `<option>${t}</option>`).join('')}</select></label>
+    <label for="f-fonte">Fonte (link do Instagram ou notícia)<input id="f-fonte" type="url" placeholder="https://www.instagram.com/p/..." inputmode="url"></label>
+    <label for="f-obs">Observação<textarea id="f-obs" placeholder="Ex.: prefeito anunciou apoio em evento no dia 12/08"></textarea></label>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span class="msg" id="f-msg"></span><button class="btn primary" type="submit">Salvar apoio</button></div>
+  </form>`;
+}
+
+async function submitApoio(e) {
+  e.preventDefault();
+  const msg = $('#f-msg'), dep = $('#f-dep').value, fonte = $('#f-fonte').value.trim(), btn = e.target.querySelector('button[type=submit]');
+  msg.className = 'msg';
+  if (!dep) { msg.textContent = 'Escolha o deputado.'; msg.classList.add('err'); return; }
+  if (fonte && !safeUrl(fonte)) { msg.textContent = 'O link precisa começar com https://'; msg.classList.add('err'); return; }
+  if (state.apoios.some(a => a.municipioId === state.mun && a.deputadoId === dep && a.tipo === $('#f-tipo').value)) { msg.textContent = 'Esse apoio já está registrado.'; msg.classList.add('err'); return; }
+  btn.disabled = true; msg.textContent = 'Salvando…';
+  try {
+    await state.db.collection('apoios').add({ municipioId: state.mun, deputadoId: dep, tipo: $('#f-tipo').value, fonte, obs: $('#f-obs').value.trim().slice(0, 500), criadoEm: Date.now() });
+  } catch (err) {
+    btn.disabled = false; msg.classList.add('err');
+    msg.textContent = err?.code === 'invalid_argument' ? 'Você não tem permissão para salvar aqui.' : err?.code === 'quota_exceeded' ? 'O limite de registros foi atingido.' : 'Não foi possível salvar. Tente de novo.';
+    if (err?.code === 'invalid_argument') { state.canWrite = false; }
+  }
+}
+
+function askDelete(b) {
+  if (b.dataset.confirm) { b.disabled = true; state.db.collection('apoios').doc(b.dataset.del).delete().catch(() => { b.disabled = false; b.textContent = 'Erro ao remover'; }); return; }
+  b.dataset.confirm = '1'; b.textContent = 'Confirmar remoção'; b.style.color = 'var(--danger)';
+  setTimeout(() => { if (b.isConnected) { delete b.dataset.confirm; b.textContent = 'Remover'; b.style.color = ''; } }, 4000);
+}
+
+/* ---------- painel: deputados ---------- */
+function renderDep() {
+  const P = $('#pane-dep'), by = apoiosByDep();
+  const rows = DEP.map(d => ({ d, n: new Set((by[d.id] || []).map(a => a.municipioId)).size })).sort((a, b) => b.n - a.n || a.d.nome.localeCompare(b.d.nome));
+  const max = Math.max(1, ...rows.map(r => r.n));
+  P.innerHTML = `<div><div class="eyebrow">Eleitos em 4/10/2026 · mandato 2027–2031</div><h2>25 deputados federais</h2></div>
+    <p class="note">Clique em um deputado para ver no mapa as prefeituras que o apoiam. O número à direita é a quantidade de prefeituras com apoio registrado. Para ver onde cada um foi votado, use a aba <b>Votos</b>${state.dep ? ` ou <button type="button" class="linkbtn" data-gocand="${esc(state.dep)}">veja os votos de ${esc(depById[state.dep]?.nome)}</button>` : ''}.</p>
+    <div class="deplist">${rows.map(({ d, n }) => `
+      <button type="button" class="dep" data-dep="${d.id}" aria-pressed="${state.dep === d.id}">
+        <span class="num">${esc(d.numero)}</span>
+        <span style="min-width:0"><span class="dn">${esc(d.nome)}</span> <span class="pill"><i style="background:${pcolor(d.partido)}"></i>${esc(d.partido)}</span>
+          <div class="dp">${fmtN(d.votosPE)} votos · ${esc(d.situacao)}${d.federacao ? ' · Federação ' + esc(d.federacao) : ''}</div>
+          ${(() => { const s = emDepStats(d.id); return s && s.v ? `<div class="dp">Emendas pagas ${esc(emPerLabel())}: ${fmtR(s.v)} em ${s.n} cidades</div>` : ''; })()}
+          <div class="bar" style="width:${n ? Math.max(4, n / max * 100) : 0}%"></div></span>
+        <span class="cnt">${n}</span>
+      </button>`).join('')}</div>`;
+  P.querySelectorAll('[data-dep]').forEach(b => b.addEventListener('click', () => { state.dep = state.dep === b.dataset.dep ? null : b.dataset.dep; renderAll(); }));
+  P.querySelectorAll('[data-gocand]').forEach(b => b.addEventListener('click', () => goCand(b.dataset.gocand)));
+}
+
+/* ---------- painel: votos por candidato ---------- */
+let votAll = false;
+function renderVot() {
+  const P = $('#pane-vot');
+  if (!state.cand) {
+    const top = candList().slice(0, 12);
+    P.innerHTML = `<div><div class="eyebrow">Deputado federal 2026</div><h2>Onde o candidato foi votado</h2></div>
+      <p class="note">Escolha um nome para ver no mapa todas as cidades onde ele teve voto, com a quantidade em cada uma. Você também pode digitar o nome na busca acima do mapa, no modo "Votos por candidato".</p>
+      <div class="deplist">${top.map(c => `<button type="button" class="dep" data-cand="${esc(c.sq)}"><span class="num">${esc(c.numero)}</span><span style="min-width:0"><span class="dn">${esc(c.nome)}</span> <span class="pill"><i style="background:${pcolor(c.partido)}"></i>${esc(c.partido)}</span>${c.eleito ? '<span class="badge-e">eleito</span>' : ''}<div class="dp">${fmtN(c.votosPE)} votos</div></span><span class="cnt"></span></button>`).join('')}</div>`;
+    P.querySelectorAll('[data-cand]').forEach(b => b.addEventListener('click', () => { goCand(b.dataset.cand); }));
+    return;
+  }
+  const c = candInfo(state.cand), vv = candVotes(state.cand);
+  const rows = MUN.map(m => ({ m, v: vv[m.id] || 0, t: VOT.municipios[m.id]?.total || 0 })).filter(r => r.v > 0).sort((a, b) => b.v - a.v);
+  const tot = c?.votosPE || rows.reduce((s, r) => s + r.v, 0), max = rows[0]?.v || 1;
+  const pos = id => { const e = VOT.municipios[id]; if (!e) return ''; const i = e.top.findIndex(x => x[0] === state.cand); return i >= 0 ? i + 1 : ''; };
+  const first = rows.filter(r => pos(r.m.id) === 1).length;
+  const regs = {}; rows.forEach(r => regs[r.m.regiao] = (regs[r.m.regiao] || 0) + r.v);
+  const shown = votAll ? rows : rows.slice(0, 40);
+  P.innerHTML = `<div class="cand-head"><div class="avatar" style="background:${pcolor(c?.partido)}">${esc(c?.numero || '')}</div><div style="min-width:0"><div class="eyebrow">Deputado federal 2026</div><div class="name" style="font-weight:700;font-size:16px">${esc(c?.nome)} <span class="pill"><i style="background:${pcolor(c?.partido)}"></i>${esc(c?.partido)}</span>${isEl(state.cand) ? '<span class="badge-e">eleito</span>' : '<span class="badge-ne">não eleito</span>'}</div></div></div>
+    <div class="kpis"><div><b>${fmtN(tot)}</b><span>votos em PE</span></div><div><b>${rows.length}</b><span>cidades com voto</span></div><div><b>${first}</b><span>cidades em 1º lugar</span></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" type="button" id="vot-clear">Escolher outro</button><button class="btn" type="button" id="vot-csv">Baixar CSV</button><span class="msg" id="vot-msg"></span></div>
+    <div class="sup"><h3>Por região imediata</h3>${Object.entries(regs).sort((a, b) => b[1] - a[1]).slice(0, 8).map(([r, v]) => `<div class="em-row"><span class="who">${esc(r)}</span><span class="v">${fmtN(v)} · ${fmtP(pct(v, tot))}</span><span class="track"><i style="width:${v / Math.max(...Object.values(regs)) * 100}%;background:var(--grad)"></i></span></div>`).join('')}</div>
+    <div class="sup"><h3>Votos por cidade <span class="mono" style="color:var(--muted)">${rows.length}</span></h3>
+    <div class="tablewrap"><table class="vt"><thead><tr><th>#</th><th>Cidade</th><th>Votos</th><th>% da cidade</th><th>Posição</th><th></th></tr></thead><tbody>
+    ${shown.map((r, i) => `<tr data-id="${r.m.id}"><td class="num">${i + 1}</td><td><b>${esc(r.m.nome)}</b></td><td class="num">${fmtN(r.v)}</td><td class="num">${fmtP(pct(r.v, r.t))}</td><td class="num">${pos(r.m.id) ? pos(r.m.id) + 'º' : '—'}</td><td class="bar"><i style="width:${Math.max(2, r.v / max * 100)}%"></i></td></tr>`).join('')}
+    </tbody></table></div>
+    ${rows.length > 40 ? `<button class="btn ghost" type="button" id="vot-all">${votAll ? 'Mostrar só as 40 primeiras' : `Mostrar todas as ${rows.length} cidades`}</button>` : ''}
+    <p class="note">Votos nominais válidos para deputado federal em 4/10/2026 (TSE). Posição = colocação do candidato na cidade (só aparece se ficou entre os 5 primeiros). Clique numa cidade para vê-la no mapa.</p></div>`;
+  P.querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', () => zoomToMun(tr.dataset.id)));
+  $('#vot-all')?.addEventListener('click', () => { votAll = !votAll; renderVot(); });
+  $('#vot-clear').addEventListener('click', () => { state.cand = ''; candq.value = ''; renderAll(); if (state.mode === 'cand') candq.focus(); });
+  $('#vot-csv').addEventListener('click', async () => {
+    const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`, msg = $('#vot-msg'); msg.className = 'msg';
+    const text = '\ufeff' + [['Candidato', 'Partido', 'Município', 'Região imediata', 'Votos', '% dos votos da cidade', 'Posição na cidade'].map(q).join(';'), ...rows.map(r => [c?.nome, c?.partido, r.m.nome, r.m.regiao, r.v, pct(r.v, r.t).toFixed(2).replace('.', ','), pos(r.m.id)].map(q).join(';'))].join('\r\n');
+    const dl = await useCap('downloads');
+    if (dl) { try { await dl.save({ filename: 'votos-' + nrm(c?.nome).replace(/[^a-z0-9]+/g, '-') + '.csv', data: new Blob([text], { type: 'text/csv' }) }); msg.textContent = 'Arquivo pronto.'; msg.classList.add('ok'); return; } catch { } }
+    try { await navigator.clipboard.writeText(text); msg.textContent = 'Copiei a tabela; cole numa planilha.'; msg.classList.add('ok'); } catch { msg.textContent = 'Não foi possível baixar nem copiar.'; msg.classList.add('err'); }
+  });
+}
+function goCand(sq) { if (state.mode !== 'cand') $('#mode-cand').click(); pickCand(sq); }
+
+/* ---------- painel: relatório ---------- */
+let relFilter = '', relOpp = false;
+function relRows() {
+  const by = apoiosByMun();
+  return MUN.slice().sort((a, b) => a.nome.localeCompare(b.nome)).map(m => ({ m, deps: [...new Set((by[m.id] || []).map(a => { const c = candInfo(a.deputadoId); return c ? c.nome + (/Levantamento/.test(a.tipo) ? ' (prelim.)' : '') : null; }).filter(Boolean))] }));
+}
+function renderRel() {
+  const P = $('#pane-rel');
+  const t = norm(relFilter);
+  const rows = relRows().filter(({ m }) => !relOpp || oppOf(m)).filter(({ m, deps }) => !t || norm([m.nome, m.prefeito, igOf(m.id)?.handle, topOf(m.id)?.c.nome, m.partido, m.regiao, deps.join(' '), emByAuthor(m.id)[0] ? emName(emByAuthor(m.id)[0].a) : ''].join(' ')).includes(t));
+  P.innerHTML = `<div><div class="eyebrow">185 municípios · prefeitos 2025–2028 · votação 2026</div><h2>Relatório por cidade</h2></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input id="relq" type="search" placeholder="Filtrar por cidade, prefeito, partido, região ou deputado" value="${esc(relFilter)}" style="flex:1 1 200px;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg)">
+      <button class="btn" type="button" id="relopp" aria-pressed="${relOpp}">Só oportunidades</button>
+      <button class="btn" type="button" id="csv">Baixar CSV</button>
+    </div>
+    <span class="msg" id="csvmsg"></span>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Município</th><th>Oportunidade</th><th>Mais votado dep. federal 2026</th><th>Votos</th><th>Emendas ${esc(emPerLabel())}</th><th>Maior autor</th><th>Prefeito(a)</th><th>Instagram</th><th>Partido</th><th>Vice</th><th>Região</th><th>Lat</th><th>Long</th><th>Deputados apoiados</th></tr></thead>
+      <tbody>${rows.map(({ m, deps }) => `<tr data-id="${m.id}"><td><b>${esc(m.nome)}</b></td><td>${oppOf(m) ? oppTag(oppOf(m)) : ''}</td><td>${topOf(m.id) ? `<span class="pill"><i style="background:${pcolor(topOf(m.id).c.partido)}"></i>${esc(topOf(m.id).c.partido)}</span> ${esc(topOf(m.id).c.nome)}${topOf(m.id).c.eleito ? '' : ' <span class="badge-ne">não eleito</span>'}` : '—'}</td><td class="num">${topOf(m.id) ? fmtN(topOf(m.id).v) + ' · ' + fmtP(topOf(m.id).p) : ''}</td><td class="num">${fmtR(emSum(m.id, ''))}</td><td>${emByAuthor(m.id)[0] ? esc(emName(emByAuthor(m.id)[0].a)) : '—'}</td><td>${esc(m.prefeito || 'Distrito estadual')}</td><td>${igOf(m.id) ? `<a href="https://www.instagram.com/${encodeURIComponent(igOf(m.id).handle)}/" target="_blank" rel="noopener" onclick="event.stopPropagation()">@${esc(igOf(m.id).handle)}</a>${igOf(m.id).status === 'confirmado' ? '' : ' <span class="flag">a confirmar</span>'}` : '<span style="color:var(--muted)">—</span>'}</td><td><span class="pill"><i style="background:${pcolor(m.partido)}"></i>${esc(m.partido)}</span></td><td>${esc(m.vice)}</td><td>${esc(m.regiao)}</td><td class="num">${fmtCoord(m.lat)}</td><td class="num">${fmtCoord(m.lng)}</td><td>${deps.length ? esc(deps.join(', ')) : '<span style="color:var(--muted)">—</span>'}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <p class="note">${rows.length} de 185 municípios. Mais votado = candidato a deputado federal com mais votos nominais válidos na cidade em 2026. Localização = coordenada da sede municipal (IBGE), onde fica a prefeitura. Clique numa linha para abrir no mapa.</p>`;
+  const rq = $('#relq');
+  rq.addEventListener('input', () => { relFilter = rq.value; const pos = rq.selectionStart; renderRel(); const n = $('#relq'); n.focus(); n.setSelectionRange(pos, pos); });
+  P.querySelectorAll('tbody tr').forEach(tr => tr.addEventListener('click', () => { selectMun(tr.dataset.id); zoomToMun(tr.dataset.id); $('#mapbox').scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' }); }));
+  $('#csv').addEventListener('click', () => exportCsv(rows));
+  $('#relopp').addEventListener('click', () => { relOpp = !relOpp; renderRel(); });
+}
+async function exportCsv(rows) {
+  const msg = $('#csvmsg'); msg.className = 'msg';
+  const c = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+  const lines = [['Código IBGE','Município','Região','Oportunidade','Eleito mais votado na cidade','Mais votado dep. federal 2026','Partido do mais votado','Votos do mais votado','% na cidade',`Emendas pagas ${emPerLabel()} (R$)`,'Maior autor de emendas','Valor do maior autor (R$)','Prefeito(a)','Instagram','Instagram confirmado?','Nome completo','Partido','Vice','Partido do vice','Latitude','Longitude','Deputados apoiados','Google Maps'].map(c).join(';')];
+  for (const { m, deps } of rows) lines.push([m.id, m.nome, m.regiao, oppOf(m) ? OPP_LABEL[oppOf(m).nivel] : '', oppOf(m)?.best ? oppOf(m).best.d.nome : '', topOf(m.id)?.c.nome || '', topOf(m.id)?.c.partido || '', topOf(m.id)?.v ?? '', topOf(m.id) ? topOf(m.id).p.toFixed(1).replace('.', ',') : '', Math.round(emSum(m.id, '')), emByAuthor(m.id)[0] ? emName(emByAuthor(m.id)[0].a) : '', emByAuthor(m.id)[0] ? Math.round(emByAuthor(m.id)[0].v) : '', m.prefeito || 'Distrito estadual', igOf(m.id) ? '@' + igOf(m.id).handle : '', igOf(m.id) ? (igOf(m.id).status === 'confirmado' ? 'sim' : 'não') : '', m.prefeitoNome, m.partido, m.vice, m.vicePartido, String(m.lat).replace('.', ','), String(m.lng).replace('.', ','), deps.join(', '), mapsLink(m)].map(c).join(';'));
+  const text = '﻿' + lines.join('\r\n');
+  const dl = await useCap('downloads');
+  if (dl) { try { await dl.save({ filename: 'prefeitos-pe-apoios.csv', data: new Blob([text], { type: 'text/csv' }) }); msg.textContent = 'Arquivo pronto.'; msg.classList.add('ok'); return; } catch { } }
+  try { await navigator.clipboard.writeText(text); msg.textContent = 'Download indisponível aqui. Copiei a tabela; cole numa planilha.'; msg.classList.add('ok'); }
+  catch { msg.textContent = 'Não foi possível baixar nem copiar nesta tela.'; msg.classList.add('err'); }
+}
+
+/* ---------- estatísticas ---------- */
+function renderStats() {
+  const muns = new Set(state.apoios.map(a => a.municipioId)).size;
+  const live = state.snap ? '<span class="dot"></span>cópia de ' + esc(state.snap) : state.live ? '<span class="dot live"></span>ao vivo' : '<span class="dot"></span>' + (state.loadErr ? 'offline' : 'conectando');
+  $('#stats').innerHTML = `
+    <div class="stat"><b>184</b><span>prefeituras</span></div>
+    <div class="stat"><b>25</b><span>deputados federais</span></div>
+    <div class="stat"><b>${state.apoios.length}</b><span>apoios registrados</span></div>
+    <div class="stat"><b>${muns}</b><span>cidades com apoio</span></div>
+    <div class="stat"><span class="status">${live}</span></div>`;
+}
+
+function renderPane() { ({ mun: renderMun, dep: renderDep, vot: renderVot, rel: renderRel })[state.tab](); }
+function renderAll() { paintMap(); renderPane(); renderStats(); }
+
+renderAll();
+
+/* ---------- dados compartilhados ---------- */
+(async () => {
+  const timer = setTimeout(() => { if (!state.live) { state.loadErr = 'Os apoios registrados ainda não carregaram. Verifique a conexão.'; renderAll(); } }, 10000);
+  const [db, user] = await Promise.all([useCap('db'), useCap('user')]);
+  if (!db) { clearTimeout(timer);
+    if (DATA.snapshot) { state.snap = DATA.snapshot.data; state.apoios = DATA.snapshot.apoios || []; state.ig = DATA.snapshot.ig || {}; state.live = true; state.canWrite = false; state.loadErr = ''; renderAll(); return; }
+    state.loadErr = 'Entre na sua conta do claude.ai para ver e registrar apoios.'; renderAll(); return; }
+  state.db = db;
+  const cw = user ? await user.can('data.write').catch(() => null) : null;
+  state.canWrite = cw === null ? null : !!cw;
+  if (state.canWrite === null) state.canWrite = true;
+  db.collection('instagram').onSnapshot(snap => {
+    state.ig = Object.fromEntries(snap.docs.map(d => [d.id, d.data()]));
+    if (igEditing || document.activeElement?.closest?.('form')) { paintMap(); return; }
+    renderAll();
+  }, () => {});
+  db.collection('apoios').onSnapshot(snap => {
+    state.apoios = snap.docs.map(d => ({ ...d.data(), _id: d.id }));
+    if (!snap.metadata.fromCache) { state.live = true; state.loadErr = ''; clearTimeout(timer); }
+    const typing = document.activeElement?.closest?.('form.add') && $('#f-msg')?.textContent !== 'Salvando…';
+    if (typing && state.tab === 'mun') { paintMap(); renderStats(); return; }
+    renderAll();
+  }, err => { clearTimeout(timer); state.loadErr = 'Não foi possível carregar os apoios agora.'; renderAll(); });
+})();
+</script>
